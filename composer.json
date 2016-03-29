@@ -1,0 +1,22 @@
+{
+  "name": "webgriffe/lib-unicredit-imprese",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Webgriffe SRL",
+      "email": "support@webgriffe.com"
+    }
+  ],
+  "require": {
+    "psr/log": "^1.0"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^2.5",
+    "phpspec/phpspec": "^2.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Webgriffe\\LibUnicreditImprese\\": "src/"
+    }
+  }
+}

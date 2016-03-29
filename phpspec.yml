@@ -1,0 +1,4 @@
+suites:
+    inventory_suite:
+        namespace: Webgriffe\LibUnicreditImprese
+        psr4_prefix: Webgriffe\LibUnicreditImprese
