@@ -74,7 +74,7 @@ class PaymentVerifyRequest extends PaymentRequest
         $this->tid =
         $this->shopId =
         $this->paymentId =
-        $this->signature = NULL;
+        $this->signature = null;
     }
 
     public function getSignatureData()

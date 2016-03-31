@@ -7,6 +7,7 @@
  */
 namespace Webgriffe\LibUnicreditImprese;
 
-interface PaymentResponseInterface{
+interface PaymentResponseInterface
+{
 
 }

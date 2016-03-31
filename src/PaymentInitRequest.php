@@ -457,27 +457,51 @@ class PaymentInitRequest extends PaymentRequest
     /**
      * @Array $data
      */
-    protected function initFromArray($data)
+    protected function fromArray($data)
     {
-        $this->tid = $data["tid"];
-        $this->shopId = $data["shopId"];
-        $this->shopUserRef = $data["shopUserRef"];
-        $this->shopUserName = $data["shopUserName"];
-        $this->shopUserAccount = $data["shopUserAccount"];
-        $this->trType = $data["trType"];
-        $this->amount = $data["amount"];
-        $this->currencyCode = $data["currencyCode"];
-        $this->langId = $data["langId"];
-        $this->notifyUrl = $data["notifyUrl"];
-        $this->errorUrl = $data["errorUrl"];
-        $this->addInfo1 = $data["addInfo1"];
-        $this->addInfo2 = $data["addInfo2"];
-        $this->addInfo3 = $data["addInfo3"];
-        $this->addInfo4 = $data["addInfo4"];
-        $this->addInfo5 = $data["addInfo5"];
-        $this->description = $data["description"];
-        $this->recurrent = $data["recurrent"];
-        $this->freeText = $data["freeText"];
+        $this->tid = $data["Tid"];
+        $this->shopId = $data["ShopId"];
+        $this->shopUserRef = $data["ShopUserRef"];
+        $this->shopUserName = $data["ShopUserName"];
+        $this->shopUserAccount = $data["ShopUserAccount"];
+        $this->trType = $data["TrType"];
+        $this->amount = $data["Amount"];
+        $this->currencyCode = $data["CurrencyCode"];
+        $this->langId = $data["LangId"];
+        $this->notifyUrl = $data["NotifyURL"];
+        $this->errorUrl = $data["ErrorURL"];
+        $this->addInfo1 = $data["AddInfo1"];
+        $this->addInfo2 = $data["AddInfo2"];
+        $this->addInfo3 = $data["AddInfo3"];
+        $this->addInfo4 = $data["AddInfo4"];
+        $this->addInfo5 = $data["AddInfo5"];
+        $this->description = $data["Description"];
+        $this->recurrent = $data["Recurrent"];
+        $this->freeText = $data["FreeText"];
+    }
+
+    public function toArray()
+    {
+        $data["Tid"] = $this->tid;
+        $data["ShopId"] = $this->shopId;
+        $data["ShopUserRef"] = $this->shopUserRef;
+        $data["ShopUserName"] = $this->shopUserName;
+        $data["ShopUserAccount"] = $this->shopUserAccount;
+        $data["TrType"] = $this->trType;
+        $data["Amount"] = $this->amount;
+        $data["CurrencyCode"] = $this->currencyCode;
+        $data["LangId"] = $this->langId;
+        $data["NotifyURL"] = $this->notifyUrl;
+        $data["ErrorURL"] = $this->errorUrl;
+        $data["AddInfo1"] = $this->addInfo1;
+        $data["AddInfo2"] = $this->addInfo2;
+        $data["AddInfo3"] = $this->addInfo3;
+        $data["AddInfo4"] = $this->addInfo4;
+        $data["AddInfo5"] = $this->addInfo5;
+        $data["Description"] = $this->description;
+        $data["Recurrent"] = $this->recurrent;
+        $data["FreeText"] = $this->freeText;
+        return $data;
     }
 
     public function reset()
@@ -500,7 +524,8 @@ class PaymentInitRequest extends PaymentRequest
         $this->addInfo5 =
         $this->description =
         $this->recurrent =
-        $this->freeText = NULL;
+        $this->freeText =
+        $this->signature =
+            null;
     }
 }
-

@@ -26,20 +26,20 @@ class PaymentInitRequestSpec extends ObjectBehavior
         $requestValidator->validate($data)->willReturn(true);
 
         $this->initialize($data);
-        $this->getTid()->shouldBe($data["tid"]);
-        $this->getShopId()->shouldReturn($data["shopId"]);
-        $this->getShopUserRef()->shouldReturn($data["shopUserRef"]);
-        $this->getShopUserName()->shouldReturn($data["shopUserName"]);
-        $this->getShopUserAccount()->shouldReturn($data["shopUserAccount"]);
-        $this->getTrType()->shouldReturn($data["trType"]);
-        $this->getAmount()->shouldReturn($data["amount"]);
-        $this->getCurrencyCode()->shouldReturn($data["currencyCode"]);
-        $this->getLangId()->shouldReturn($data["langId"]);
-        $this->getNotifyUrl()->shouldReturn($data["notifyUrl"]);
-        $this->getErrorUrl()->shouldReturn($data["errorUrl"]);
-        $this->getDescription()->shouldReturn($data["description"]);
-        $this->isRecurrent()->shouldReturn($data["recurrent"]);
-        $this->getFreeText()->shouldReturn($data["freeText"]);
+        $this->getTid()->shouldBe($data["Tid"]);
+        $this->getShopId()->shouldReturn($data["ShopId"]);
+        $this->getShopUserRef()->shouldReturn($data["ShopUserRef"]);
+        $this->getShopUserName()->shouldReturn($data["ShopUserName"]);
+        $this->getShopUserAccount()->shouldReturn($data["ShopUserAccount"]);
+        $this->getTrType()->shouldReturn($data["TrType"]);
+        $this->getAmount()->shouldReturn($data["Amount"]);
+        $this->getCurrencyCode()->shouldReturn($data["CurrencyCode"]);
+        $this->getLangId()->shouldReturn($data["LangId"]);
+        $this->getNotifyUrl()->shouldReturn($data["NotifyURL"]);
+        $this->getErrorUrl()->shouldReturn($data["ErrorURL"]);
+        $this->getDescription()->shouldReturn($data["Description"]);
+        $this->isRecurrent()->shouldReturn($data["Recurrent"]);
+        $this->getFreeText()->shouldReturn($data["FreeText"]);
     }
 
     function it_throws_an_exception_on_init_from_invalid_array(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
@@ -53,25 +53,25 @@ class PaymentInitRequestSpec extends ObjectBehavior
 
     protected function getValidInitArray(){
         $data = Array();
-        $data["tid"] = 5;
-        $data["shopId"] = "123456";
-        $data["shopUserRef"] = "222";
-        $data["shopUserName"] = "12345";
-        $data["shopUserAccount"] = "1115";
-        $data["trType"] = "";
-        $data["amount"] = 50.15;
-        $data["currencyCode"] = "EUR";
-        $data["langId"] = "IT";
-        $data["notifyUrl"] = "http://www.mytest.com/success";
-        $data["errorUrl"] = "http://www.mytest.com/error";
-        $data["addInfo1"] = "info addr line 1";
-        $data["addInfo2"] = "info addr line 2";
-        $data["addInfo3"] = "info addr line 3";
-        $data["addInfo4"] = "info addr line 4";
-        $data["addInfo5"] = "info addr line 5";
-        $data["description"] = "description description description";
-        $data["recurrent"] = false;
-        $data["freeText"] = "free text free text free text free text";
+        $data["Tid"] = 5;
+        $data["ShopId"] = "123456";
+        $data["ShopUserRef"] = "222";
+        $data["ShopUserName"] = "12345";
+        $data["ShopUserAccount"] = "1115";
+        $data["TrType"] = "";
+        $data["Amount"] = 50.15;
+        $data["CurrencyCode"] = "EUR";
+        $data["LangId"] = "IT";
+        $data["NotifyURL"] = "http://www.mytest.com/success";
+        $data["ErrorURL"] = "http://www.mytest.com/error";
+        $data["AddInfo1"] = "info addr line 1";
+        $data["AddInfo2"] = "info addr line 2";
+        $data["AddInfo3"] = "info addr line 3";
+        $data["AddInfo4"] = "info addr line 4";
+        $data["AddInfo5"] = "info addr line 5";
+        $data["Description"] = "description description description";
+        $data["Recurrent"] = false;
+        $data["FreeText"] = "free text free text free text free text";
         return $data;
     }
 }

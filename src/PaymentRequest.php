@@ -1,6 +1,7 @@
 <?php
 
 namespace Webgriffe\LibUnicreditImprese;
+
 use Psr\Log\LoggerInterface;
 
 abstract class PaymentRequest implements PaymentRequestInterface
@@ -22,20 +23,23 @@ abstract class PaymentRequest implements PaymentRequestInterface
      * @param LoggerInterface $logger
      * @param SignatureCalculatorInterface $ISignatureCalculator
      */
-    public function __construct(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        SignatureCalculatorInterface $signatureCalculator,
+        RequestValidatorInterface $requestValidator
+    ) {
         $this->logger = $logger;
         $this->signatureCalculator = $signatureCalculator;
         $this->requestValidator = $requestValidator;
     }
 
-    public function initialize($data){
+    public function initialize($data)
+    {
         $this->reset();
-        if(!$this->requestValidator->validate($data))
-        {
+        if (!$this->requestValidator->validate($data)) {
             throw new \InvalidArgumentException("Could not initialize with this data!");
         }
-        $this->initFromArray($data);
+        $this->fromArray($data);
     }
 
     /**
@@ -43,13 +47,13 @@ abstract class PaymentRequest implements PaymentRequestInterface
      */
     public function getSignature($key)
     {
-        if(!$this->signature) {
+        if (!$this->signature) {
             $this->signature = $this->signatureCalculator->calculate($this->getSignatureData(), $key);
         }
         return $this->signature;
     }
 
-    public abstract function reset();
+    abstract public function reset();
 
-    public abstract function getSignatureData();
+    abstract public function getSignatureData();
 }

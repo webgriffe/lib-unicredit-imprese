@@ -11,14 +11,14 @@ class Client
     protected $tId;
     protected $soapClient;
 
-    public function  __construct( $mode, array $config, array $soapConfig )
+    public function __construct(array $config, array $soapConfig = array())
     {
         $this->wsdlUrl = $config["wsdlUrl"];
         $this->tId = $config["tId"];
         $this->kSig = $config["kSig"];
     }
 
-    public function PaymentInit($paymentData)
+    public function paymentInit($paymentData)
     {
         $paymentInitRequest = new PaymentInitRequest();
         $paymentInitRequest->setkSig($this->kSig);
@@ -26,15 +26,16 @@ class Client
         $paymentInitRequest->initialize($paymentData);
         $paymentInitRequest->getSignature($this->kSig);
 
-        /** @todo frse è meglio inizializzare il soap client nel cosnstruct. $client */
         $client = new \SoapClient($this->wsdlUrl, $this->soapOptions);
-        /** @todo usato un semplice cast ad array, forse servirà una funzione di mapping. */
-        $response = $client->init((array)$paymentInitRequest);
+        $response = new \PaymentInitResponse();
+
+        $response->fromArray($client->init($paymentInitRequest->toArray()));
+
         $client->dispose();
         return $response;
     }
 
-    public function Verify($paymentData)
+    public function verify($paymentData)
     {
         $paymentVerifyRequest = new PaymentVerifyRequest();
         $paymentVerifyRequest->setTid($this->tId);

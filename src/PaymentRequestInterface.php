@@ -7,11 +7,12 @@
  */
 namespace Webgriffe\LibUnicreditImprese;
 
-interface PaymentRequestInterface{
+interface PaymentRequestInterface
+{
     /**
      * @return string
      */
-    function getSignatureData();
+    public function getSignatureData();
 
-    function getSignature($key);
+    public function getSignature($key);
 }

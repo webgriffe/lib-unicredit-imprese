@@ -28,25 +28,25 @@ class PaymentInitRequestValidatorSpec extends ObjectBehavior
     protected function getValidInitArray()
     {
         $data = Array();
-        $data["tid"] = 5;
-        $data["shopId"] = "123456";
-        $data["shopUserRef"] = "222";
-        $data["shopUserName"] = "12345";
-        $data["shopUserAccount"] = "1115";
-        $data["trType"] = "";
-        $data["amount"] = 50.15;
-        $data["currencyCode"] = "EUR";
-        $data["langId"] = "IT";
-        $data["notifyUrl"] = "http://www.mytest.com/success";
-        $data["errorUrl"] = "http://www.mytest.com/error";
-        $data["addInfo1"] = "info addr line 1";
-        $data["addInfo2"] = "info addr line 2";
-        $data["addInfo3"] = "info addr line 3";
-        $data["addInfo4"] = "info addr line 4";
-        $data["addInfo5"] = "info addr line 5";
-        $data["description"] = "description description description";
-        $data["recurrent"] = false;
-        $data["freeText"] = "free text free text free text free text";
+        $data["Tid"] = 5;
+        $data["ShopId"] = "123456";
+        $data["ShopUserRef"] = "222";
+        $data["ShopUserName"] = "12345";
+        $data["ShopUserAccount"] = "1115";
+        $data["TrType"] = "";
+        $data["Amount"] = 50.15;
+        $data["CurrencyCode"] = "EUR";
+        $data["LangId"] = "IT";
+        $data["NotifyURL"] = "http://www.mytest.com/success";
+        $data["ErrorURL"] = "http://www.mytest.com/error";
+        $data["AddInfo1"] = "info addr line 1";
+        $data["AddInfo2"] = "info addr line 2";
+        $data["AddInfo3"] = "info addr line 3";
+        $data["AddInfo4"] = "info addr line 4";
+        $data["AddInfo5"] = "info addr line 5";
+        $data["Description"] = "description description description";
+        $data["Recurrent"] = false;
+        $data["FreeText"] = "free text free text free text free text";
         return $data;
     }
 
