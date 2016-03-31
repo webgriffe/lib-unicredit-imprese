@@ -9,43 +9,73 @@ class Client
 
     protected $kSig;
     protected $tId;
-    protected $soapClient;
 
-    public function __construct(array $config, array $soapConfig = array())
+    /**
+     * @return mixed
+     */
+    public function getKSig()
     {
-        $this->wsdlUrl = $config["wsdlUrl"];
-        $this->tId = $config["tId"];
-        $this->kSig = $config["kSig"];
+        return $this->kSig;
     }
 
-    public function paymentInit($paymentData)
+    /**
+     * @param mixed $kSig
+     */
+    public function setKSig($kSig)
     {
-        $paymentInitRequest = new PaymentInitRequest();
-        $paymentInitRequest->setkSig($this->kSig);
-        $paymentInitRequest->setTid($this->tId);
-        $paymentInitRequest->initialize($paymentData);
-        $paymentInitRequest->getSignature($this->kSig);
+        $this->kSig = $kSig;
+    }
 
-        $client = new \SoapClient($this->wsdlUrl, $this->soapOptions);
+    /**
+     * @return mixed
+     */
+    public function getTId()
+    {
+        return $this->tId;
+    }
+
+    /**
+     * @param mixed $tId
+     */
+    public function setTId($tId)
+    {
+        $this->tId = $tId;
+    }
+    protected $soapClient;
+
+    public function __construct(\SoapClient $soapClient)
+    {
+        $this->soapClient = $soapClient;
+    }
+
+    protected function canExecute()
+    {
+        return isset($this->tId) && isset($this->kSig);
+    }
+
+    public function paymentInit(PaymentInitRequest $request)
+    {
+        if(!$this->canExecute())
+            throw new \Exception("Please set tid and ksig before this call.");
+
+        $request->setTid($this->tId);
+        $request->getSignature($this->kSig);
+
         $response = new \PaymentInitResponse();
-
-        $response->fromArray($client->init($paymentInitRequest->toArray()));
-
-        $client->dispose();
+        $response->fromArray($this->soapClient->init($request->toArray()));
         return $response;
     }
 
-    public function verify($paymentData)
+    public function verify(PaymentVerifyRequest $request)
     {
-        $paymentVerifyRequest = new PaymentVerifyRequest();
-        $paymentVerifyRequest->setTid($this->tId);
-        $paymentVerifyRequest->setShopId($paymentData["ShopId"]);
-        $paymentVerifyRequest->setPaymentId($paymentData["PaymentId"]);
-        $paymentVerifyRequest->getSignature($this->kSig);
+        if(!$this->canExecute())
+            throw new \Exception("Please set tid and ksig before this call.");
 
-        $client = new \SoapClient($this->wsdlUrl, $this->soapOptions);
-        $response = $client->verify((array)$paymentVerifyRequest);
-        $client->dispose();
+        $request->setTid($this->tId);
+        $request->getSignature($this->kSig);
+
+        $response = new \PaymentVerifyResponse();
+        $response->fromArray($this->client->verify($request->toArray()));
         return $response;
     }
 }

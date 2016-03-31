@@ -25,9 +25,14 @@ class PaymentInitRequestValidatorSpec extends ObjectBehavior
         $this->validate($data)->shouldReturn(false);
     }
 
+    protected function getInvalidInitArray()
+    {
+        $data = array();
+        return $data;
+    }
     protected function getValidInitArray()
     {
-        $data = Array();
+        $data = array();
         $data["Tid"] = 5;
         $data["ShopId"] = "123456";
         $data["ShopUserRef"] = "222";
@@ -47,12 +52,6 @@ class PaymentInitRequestValidatorSpec extends ObjectBehavior
         $data["Description"] = "description description description";
         $data["Recurrent"] = false;
         $data["FreeText"] = "free text free text free text free text";
-        return $data;
-    }
-
-    protected function getInvalidInitArray()
-    {
-        $data = array();
         return $data;
     }
 }

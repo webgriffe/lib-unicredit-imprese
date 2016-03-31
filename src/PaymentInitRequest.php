@@ -5,26 +5,6 @@ namespace Webgriffe\LibUnicreditImprese;
 class PaymentInitRequest extends PaymentRequest
 {
     /**
-     * @var
-     */
-    protected $kSig;
-
-    /**
-     * @return mixed
-     */
-    public function getKSig()
-    {
-        return $this->kSig;
-    }
-
-    /**
-     * @param mixed $kSig
-     */
-    public function setKSig($kSig)
-    {
-        $this->kSig = $kSig;
-    }
-    /**
      * @var string
      */
     protected $signature;
