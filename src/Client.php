@@ -55,8 +55,9 @@ class Client
 
     public function paymentInit(PaymentInitRequest $request)
     {
-        if(!$this->canExecute())
+        if (!$this->canExecute()) {
             throw new \Exception("Please set tid and ksig before this call.");
+        }
 
         $request->setTid($this->tId);
         $request->getSignature($this->kSig);
@@ -68,8 +69,9 @@ class Client
 
     public function verify(PaymentVerifyRequest $request)
     {
-        if(!$this->canExecute())
+        if (!$this->canExecute()) {
             throw new \Exception("Please set tid and ksig before this call.");
+        }
 
         $request->setTid($this->tId);
         $request->getSignature($this->kSig);
