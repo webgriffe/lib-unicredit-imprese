@@ -30,9 +30,11 @@ class ClientSpec extends ObjectBehavior
         $this->paymentInit()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentInitResponse');
     }
 
-    function payment_verify_should_return_payment_verify_response()
+    function payment_verify_should_return_payment_verify_response(\SoapClient $soapClient)
     {
-
+        $soapClient->beADoubleOf('\SoapClient');
+        $soapClient->init()->willReturn($this->getSoapVerifyResponse());
+        $this->paymentVerify()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentVerifyResponse');
     }
 
     function getSoapInitResponse()
@@ -44,5 +46,20 @@ class ClientSpec extends ObjectBehavior
         $data["PaymentID"] = "9854";
         $data["RedirectURL"] = "http://www.banca.com/paga/";
         return $data;
+    }
+
+    function getSoapVerifyResponse()
+    {
+        $data = array();
+        $data["Error"] = "";
+        $data["Rc"] = "";
+        $data["ErrorDesc"] = "";
+        $data["TranId"] = "";
+        $data["AuthCode"] = "";
+        $data["EnrStatus"] = "";
+        $data["AuthStatus"] = "";
+        $data["Brand"] = "";
+        return $data;
+
     }
 }

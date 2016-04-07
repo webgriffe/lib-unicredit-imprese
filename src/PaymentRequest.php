@@ -45,7 +45,7 @@ abstract class PaymentRequest implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getSignature($key)
+    public function sign($key)
     {
         if (!$this->signature) {
             $this->signature = $this->signatureCalculator->calculate($this->getSignatureData(), $key);

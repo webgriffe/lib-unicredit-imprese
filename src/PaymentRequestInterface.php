@@ -14,5 +14,5 @@ interface PaymentRequestInterface
      */
     public function getSignatureData();
 
-    public function getSignature($key);
+    public function sign($key);
 }
