@@ -11,17 +11,17 @@ use Psr\Log\LoggerInterface;
 
 class RequestSpec extends ObjectBehavior
 {
-    function it_is_initializable(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
+    function it_is_initializable(SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator, LoggerInterface $logger)
     {
-        $this->beConstructedWith($logger, $signatureCalculator, $requestValidator);
+        $this->beConstructedWith($signatureCalculator, $requestValidator, $logger);
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Request');
     }
 
-    function it_should_init_from_array(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
+    function it_should_init_from_array(SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator, LoggerInterface $logger)
     {
         $requestValidator->beADoubleOf('Webgriffe\LibUnicreditImprese\PaymentInit\RequestValidator');
 
-        $this->beConstructedWith($logger, $signatureCalculator, $requestValidator);
+        $this->beConstructedWith($signatureCalculator, $requestValidator, $logger);
         $data = $this->getValidInitArray();
         $requestValidator->validate($data)->willReturn(true);
 
@@ -46,10 +46,10 @@ class RequestSpec extends ObjectBehavior
         $this->getFreeText()->shouldReturn($data["FreeText"]);
     }
 
-    function it_throws_an_exception_on_init_from_invalid_array(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
+    function it_throws_an_exception_on_init_from_invalid_array(SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator, LoggerInterface $logger)
     {
         $requestValidator->beADoubleOf('Webgriffe\LibUnicreditImprese\PaymentInit\RequestValidator');
-        $this->beConstructedWith($logger, $signatureCalculator, $requestValidator);
+        $this->beConstructedWith($signatureCalculator, $requestValidator, $logger);
         $data = array();
         $requestValidator->validate($data)->willReturn(false);
         $this->shouldThrow(new \InvalidArgumentException("Could not initialize with this data!"))->duringInitialize($data);

@@ -11,9 +11,9 @@ use Psr\Log\LoggerInterface;
 
 class RequestSpec extends ObjectBehavior
 {
-    function it_is_initializable(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
+    function it_is_initializable(SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator, LoggerInterface $logger)
     {
-        $this->beConstructedWith($logger, $signatureCalculator, $requestValidator);
+        $this->beConstructedWith($signatureCalculator, $requestValidator, $logger);
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentVerify\Request');
     }
 }

@@ -8,12 +8,12 @@
 
 namespace Webgriffe\LibUnicreditImprese;
 
-
 use Psr\Log\LoggerInterface;
 
 class PaymentResponse
 {
     protected $logger;
+
     public function __construct(LoggerInterface $logger = null)
     {
         $this->logger = $logger;

@@ -10,7 +10,6 @@ use Webgriffe\LibUnicreditImprese\PaymentInit\Response as InitResponse;
 use Webgriffe\LibUnicreditImprese\PaymentVerify\Request as VerifyRequest;
 use Webgriffe\LibUnicreditImprese\PaymentVerify\Response as VerifyResponse;
 
-
 class Client
 {
     const TRANSACTION_TYPE_AUTH = 'AUTH';

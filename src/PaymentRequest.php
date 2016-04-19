@@ -10,6 +10,7 @@ abstract class PaymentRequest implements PaymentRequestInterface
      * @var SignatureCalculatorInterface
      */
     protected $signatureCalculator;
+
     /**
      * @var LoggerInterface
      */
@@ -20,18 +21,18 @@ abstract class PaymentRequest implements PaymentRequestInterface
     protected $requestValidator;
 
     /**
-     * @param LoggerInterface|null $logger
      * @param SignatureCalculatorInterface $signatureCalculator
      * @param RequestValidatorInterface $requestValidator
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
-        LoggerInterface $logger = null,
         SignatureCalculatorInterface $signatureCalculator,
-        RequestValidatorInterface $requestValidator
+        RequestValidatorInterface $requestValidator,
+        LoggerInterface $logger = null
     ) {
-        $this->logger = $logger;
         $this->signatureCalculator = $signatureCalculator;
         $this->requestValidator = $requestValidator;
+        $this->logger = $logger;
     }
 
     public function initialize($data)
