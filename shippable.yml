@@ -11,3 +11,10 @@ build:
     - composer install --no-interaction
     - vendor/bin/phpspec run
     - vendor/bin/phpcs --standard=PSR2 src/
+
+integrations:
+  notifications:
+    - integrationName: webgriffe-slack
+      type: slack
+      recipients:
+        - "#devs"
