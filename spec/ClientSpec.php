@@ -4,37 +4,37 @@ namespace spec\Webgriffe\LibUnicreditImprese;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 use Webgriffe\LibUnicreditImprese\PaymentInit\Request;
 use spec\Webgriffe\LibUnicreditImprese;
 
 class ClientSpec extends ObjectBehavior
 {
-    function it_is_initializable(\SoapClient $soapClient)
+    function it_is_initializable(LoggerInterface $logger)
     {
-        $this->beConstructedWith($soapClient);
+        $this->beConstructedWith($logger);
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\Client');
     }
 
-    function should_throw_exceptions_if_tid_missing(\SoapClient $soapClient)
+    function should_throw_exceptions_if_tid_missing(LoggerInterface $logger)
     {
-        $soapClient->beADoubleOf('\SoapClient');
-        $this->beConstructedWith($soapClient);
-        $this->init(new Request());
+        $this->beConstructedWith($logger);
+        $this->paymentInit(new Request());
         $this->shouldThrow(new \Exception(""))->duringInit();
     }
 
-    function payment_init_should_return_payment_init_response(\SoapClient $soapClient)
+    function payment_init_should_return_payment_init_response(LoggerInterface $logger)
     {
         $soapClient->beADoubleOf('\SoapClient');
-        $soapClient->init()->willReturn($this->getSoapInitResponse());
-        $this->paymentInit()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentInitResponse');
+        $soapClient->paymentInit()->willReturn($this->getSoapInitResponse());
+        $this->paymentInit()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
     }
 
-    function payment_verify_should_return_payment_verify_response(\SoapClient $soapClient)
+    function payment_verify_should_return_payment_verify_response(LoggerInterface $logger)
     {
         $soapClient->beADoubleOf('\SoapClient');
-        $soapClient->init()->willReturn($this->getSoapVerifyResponse());
-        $this->paymentVerify()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentVerifyResponse');
+        $soapClient->paymentInit()->willReturn($this->getSoapVerifyResponse());
+        $this->paymentVerify()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentVerify\Response');
     }
 
     function getSoapInitResponse()

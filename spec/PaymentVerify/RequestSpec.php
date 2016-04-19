@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Webgriffe\LibUnicreditImprese;
+namespace spec\Webgriffe\LibUnicreditImprese\PaymentVerify;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -9,11 +9,11 @@ use Webgriffe\LibUnicreditImprese\SignatureCalculatorInterface;
 use Webgriffe\LibUnicreditImprese\RequestValidatorInterface;
 use Psr\Log\LoggerInterface;
 
-class PaymentVerifyRequestSpec extends ObjectBehavior
+class RequestSpec extends ObjectBehavior
 {
     function it_is_initializable(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
     {
         $this->beConstructedWith($logger, $signatureCalculator, $requestValidator);
-        $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentVerifyRequest');
+        $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentVerify\Request');
     }
 }

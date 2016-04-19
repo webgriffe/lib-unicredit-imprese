@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Webgriffe\LibUnicreditImprese;
+namespace spec\Webgriffe\LibUnicreditImprese\PaymentInit;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -9,7 +9,7 @@ use Webgriffe\LibUnicreditImprese\SignatureCalculatorInterface;
 use Webgriffe\LibUnicreditImprese\RequestValidatorInterface;
 use Psr\Log\LoggerInterface;
 
-class PaymentInitRequestSpec extends ObjectBehavior
+class RequestSpec extends ObjectBehavior
 {
     function it_is_initializable(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
     {
@@ -26,17 +26,21 @@ class PaymentInitRequestSpec extends ObjectBehavior
         $requestValidator->validate($data)->willReturn(true);
 
         $this->initialize($data);
-        $this->getTid()->shouldBe($data["Tid"]);
-        $this->getShopId()->shouldReturn($data["ShopId"]);
-        $this->getShopUserRef()->shouldReturn($data["ShopUserRef"]);
-        $this->getShopUserName()->shouldReturn($data["ShopUserName"]);
-        $this->getShopUserAccount()->shouldReturn($data["ShopUserAccount"]);
-        $this->getTrType()->shouldReturn($data["TrType"]);
-        $this->getAmount()->shouldReturn($data["Amount"]);
-        $this->getCurrencyCode()->shouldReturn($data["CurrencyCode"]);
-        $this->getLangId()->shouldReturn($data["LangId"]);
-        $this->getNotifyUrl()->shouldReturn($data["NotifyURL"]);
-        $this->getErrorUrl()->shouldReturn($data["ErrorURL"]);
+        $this->getShopId()->shouldReturn($data["shopID"]);
+        $this->getShopUserRef()->shouldReturn($data["shopUserRef"]);
+        $this->getShopUserName()->shouldReturn($data["shopUserName"]);
+        $this->getShopUserAccount()->shouldReturn($data["shopUserAccount"]);
+        $this->getTrType()->shouldReturn($data["trType"]);
+        $this->getAmount()->shouldReturn($data["amount"]);
+        $this->getCurrencyCode()->shouldReturn($data["currencyCode"]);
+        $this->getLangId()->shouldReturn($data["langID"]);
+        $this->getNotifyUrl()->shouldReturn($data["notifyURL"]);
+        $this->getErrorUrl()->shouldReturn($data["errorURL"]);
+        $this->getAddInfo1()->shouldReturn($data["addInfo1"]);
+        $this->getAddInfo2()->shouldReturn($data["addInfo2"]);
+        $this->getAddInfo3()->shouldReturn($data["addInfo3"]);
+        $this->getAddInfo4()->shouldReturn($data["addInfo4"]);
+        $this->getAddInfo5()->shouldReturn($data["addInfo5"]);
         $this->getDescription()->shouldReturn($data["Description"]);
         $this->isRecurrent()->shouldReturn($data["Recurrent"]);
         $this->getFreeText()->shouldReturn($data["FreeText"]);
@@ -51,24 +55,25 @@ class PaymentInitRequestSpec extends ObjectBehavior
         $this->shouldThrow(new \InvalidArgumentException("Could not initialize with this data!"))->duringInitialize($data);
     }
 
-    protected function getValidInitArray(){
+    protected function getValidInitArray()
+    {
         $data = Array();
-        $data["Tid"] = 5;
-        $data["ShopId"] = "123456";
-        $data["ShopUserRef"] = "222";
-        $data["ShopUserName"] = "12345";
-        $data["ShopUserAccount"] = "1115";
-        $data["TrType"] = "";
-        $data["Amount"] = 50.15;
-        $data["CurrencyCode"] = "EUR";
-        $data["LangId"] = "IT";
-        $data["NotifyURL"] = "http://www.mytest.com/success";
-        $data["ErrorURL"] = "http://www.mytest.com/error";
-        $data["AddInfo1"] = "info addr line 1";
-        $data["AddInfo2"] = "info addr line 2";
-        $data["AddInfo3"] = "info addr line 3";
-        $data["AddInfo4"] = "info addr line 4";
-        $data["AddInfo5"] = "info addr line 5";
+        $data["tid"] = 5;
+        $data["shopID"] = "123456";
+        $data["shopUserRef"] = "222";
+        $data["shopUserName"] = "12345";
+        $data["shopUserAccount"] = "1115";
+        $data["trType"] = "";
+        $data["amount"] = 50.15;
+        $data["currencyCode"] = "EUR";
+        $data["langID"] = "IT";
+        $data["notifyURL"] = "http://www.mytest.com/success";
+        $data["errorURL"] = "http://www.mytest.com/error";
+        $data["addInfo1"] = "info addr line 1";
+        $data["addInfo2"] = "info addr line 2";
+        $data["addInfo3"] = "info addr line 3";
+        $data["addInfo4"] = "info addr line 4";
+        $data["addInfo5"] = "info addr line 5";
         $data["Description"] = "description description description";
         $data["Recurrent"] = false;
         $data["FreeText"] = "free text free text free text free text";
