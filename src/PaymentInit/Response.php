@@ -1,14 +1,17 @@
 <?php
 
-namespace Webgriffe\LibUnicreditImprese;
+namespace Webgriffe\LibUnicreditImprese\PaymentInit;
 
-class PaymentInitResponse
+use Webgriffe\LibUnicreditImprese\PaymentResponse;
+
+class Response extends PaymentResponse
 {
     protected $error;
     protected $rc;
     protected $errorDesc;
     protected $paymentId;
     protected $redirectUrl;
+    
     /**
      * @return bool
      */
@@ -89,13 +92,23 @@ class PaymentInitResponse
         $this->redirectUrl = $redirectUrl;
     }
 
-
-    public function fromArray($data)
+    /**
+     * @param \stdClass $soapResponse
+     */
+    public function fromArray($soapResponse)
     {
-        $this->error = $data["Error"];
-        $this->rc = $data["Rc"];
-        $this->errorDesc = $data["ErrorDesc"];
-        $this->paymentId = $data["PaymentId"];
-        $this->redirectUrl = $data["RedirectURL"];
+        $data = $soapResponse->response;
+        if ($soapResponse->response->error) {
+            $this->logger->warning('Webservice error, description:'. $data->errorDesc);
+            throw new LogicException("Webservice error.");
+        }
+
+        
+        $this->tid = $data->tid;
+        $this->rc = $data->rc;
+        $this->error = $data->error;
+        $this->errorDesc = $data->errorDesc;
+        $this->paymentId = $data->paymentId;
+        $this->redirectUrl = $data->redirectURL;
     }
 }

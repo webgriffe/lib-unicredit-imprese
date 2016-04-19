@@ -1,8 +1,11 @@
 <?php
 
-namespace Webgriffe\LibUnicreditImprese;
+namespace Webgriffe\LibUnicreditImprese\PaymentVerify;
 
-class PaymentVerifyRequest extends PaymentRequest
+use Psr\Log\LoggerInterface;
+use Webgriffe\LibUnicreditImprese\PaymentRequest;
+
+class Request extends PaymentRequest
 {
     /**
      * @var string

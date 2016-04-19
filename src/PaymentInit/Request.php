@@ -1,8 +1,11 @@
 <?php
 
-namespace Webgriffe\LibUnicreditImprese;
+namespace Webgriffe\LibUnicreditImprese\PaymentInit;
 
-class PaymentInitRequest extends PaymentRequest
+use Psr\Log\LoggerInterface;
+use Webgriffe\LibUnicreditImprese\PaymentRequest;
+
+class Request extends PaymentRequest
 {
     /**
      * @var string
@@ -437,24 +440,23 @@ class PaymentInitRequest extends PaymentRequest
     /**
      * @Array $data
      */
-    protected function fromArray($data)
+    public function fromArray($data)
     {
-        $this->tid = $data["Tid"];
-        $this->shopId = $data["ShopId"];
-        $this->shopUserRef = $data["ShopUserRef"];
-        $this->shopUserName = $data["ShopUserName"];
-        $this->shopUserAccount = $data["ShopUserAccount"];
-        $this->trType = $data["TrType"];
-        $this->amount = $data["Amount"];
-        $this->currencyCode = $data["CurrencyCode"];
-        $this->langId = $data["LangId"];
-        $this->notifyUrl = $data["NotifyURL"];
-        $this->errorUrl = $data["ErrorURL"];
-        $this->addInfo1 = $data["AddInfo1"];
-        $this->addInfo2 = $data["AddInfo2"];
-        $this->addInfo3 = $data["AddInfo3"];
-        $this->addInfo4 = $data["AddInfo4"];
-        $this->addInfo5 = $data["AddInfo5"];
+        $this->shopId = $data["shopID"];
+        $this->shopUserRef = $data["shopUserRef"];
+        $this->shopUserName = $data["shopUserName"];
+        $this->shopUserAccount = $data["shopUserAccount"];
+        $this->trType = $data["trType"];
+        $this->amount = $data["amount"];
+        $this->currencyCode = $data["currencyCode"];
+        $this->langId = $data["langID"];
+        $this->notifyUrl = $data["notifyURL"];
+        $this->errorUrl = $data["errorURL"];
+        $this->addInfo1 = $data["addInfo1"];
+        $this->addInfo2 = $data["addInfo2"];
+        $this->addInfo3 = $data["addInfo3"];
+        $this->addInfo4 = $data["addInfo4"];
+        $this->addInfo5 = $data["addInfo5"];
         $this->description = $data["Description"];
         $this->recurrent = $data["Recurrent"];
         $this->freeText = $data["FreeText"];
@@ -462,26 +464,28 @@ class PaymentInitRequest extends PaymentRequest
 
     public function toArray()
     {
-        $data["Tid"] = $this->tid;
-        $data["ShopId"] = $this->shopId;
-        $data["ShopUserRef"] = $this->shopUserRef;
-        $data["ShopUserName"] = $this->shopUserName;
-        $data["ShopUserAccount"] = $this->shopUserAccount;
-        $data["TrType"] = $this->trType;
-        $data["Amount"] = $this->amount;
-        $data["CurrencyCode"] = $this->currencyCode;
-        $data["LangId"] = $this->langId;
-        $data["NotifyURL"] = $this->notifyUrl;
-        $data["ErrorURL"] = $this->errorUrl;
-        $data["AddInfo1"] = $this->addInfo1;
-        $data["AddInfo2"] = $this->addInfo2;
-        $data["AddInfo3"] = $this->addInfo3;
-        $data["AddInfo4"] = $this->addInfo4;
-        $data["AddInfo5"] = $this->addInfo5;
-        $data["Description"] = $this->description;
-        $data["Recurrent"] = $this->recurrent;
-        $data["FreeText"] = $this->freeText;
-        return $data;
+        return array(
+            'signature'       => $this->signature,
+            'tid'             => $this->tid,
+            'shopID'          => $this->shopId,
+            'shopUserRef'     => $this->shopUserRef,
+            'shopUserName'    => $this->shopUserName,
+            'shopUserAccount' => $this->shopUserAccount,
+            'trType'          => $this->trType,
+            'amount'          => (string)$this->amount,
+            'currencyCode'    => $this->currencyCode,
+            'langID'          => $this->langId,
+            'notifyURL'       => $this->notifyUrl,
+            'errorURL'        => $this->errorUrl,
+            'addInfo1'        => $this->addInfo1,
+            'addInfo2'        => $this->addInfo2,
+            'addInfo3'        => $this->addInfo3,
+            'addInfo4'        => $this->addInfo4,
+            'addInfo5'        => $this->addInfo5,
+            'Description'     => $this->description,
+            'Recurrent'       => $this->recurrent,
+            'FreeText'        => $this->freeText,
+        );
     }
 
     public function reset()

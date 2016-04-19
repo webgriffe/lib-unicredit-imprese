@@ -5,18 +5,19 @@
  * Date: 30/03/16
  * Time: 12.02
  */
-namespace Webgriffe\LibUnicreditImprese;
+namespace Webgriffe\LibUnicreditImprese\PaymentInit;
 
-class PaymentInitRequestValidator implements RequestValidatorInterface
+use Webgriffe\LibUnicreditImprese\RequestValidatorInterface;
+
+class RequestValidator implements RequestValidatorInterface
 {
     protected $mandatoryFields = array(
-        "Tid",
-        "TrType",
-        "ShopId",
-        "ShopUserRef",
-        "Amount",
-        "CurrencyCode",
-        "LangId"
+        "trType",
+        "shopID",
+        "shopUserRef",
+        "amount",
+        "currencyCode",
+        "langID"
     );
 
     /**

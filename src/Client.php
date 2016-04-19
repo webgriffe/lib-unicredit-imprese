@@ -2,13 +2,32 @@
 
 namespace Webgriffe\LibUnicreditImprese;
 
+use Psr\Log\LoggerInterface;
+
+use Webgriffe\LibUnicreditImprese\PaymentInit\Request as InitRequest;
+use Webgriffe\LibUnicreditImprese\PaymentInit\Response as InitResponse;
+
+use Webgriffe\LibUnicreditImprese\PaymentVerify\Request as VerifyRequest;
+use Webgriffe\LibUnicreditImprese\PaymentVerify\Response as VerifyResponse;
+
+
 class Client
 {
-    protected $wsdlUrl;
-    protected $soapOptions;
-    protected $soapClient;
+    const TRANSACTION_TYPE_AUTH = 'AUTH';
+    const TRANSACTION_TYPE_PURCHASE = 'AUTH';
+    protected $logger;
     protected $kSig;
-    protected $tId;
+    protected $tid;
+    protected $soapClient;
+
+    /**
+     * Client constructor.
+     * @param LoggerInterface $logger
+     */
+    public function __construct(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * @return mixed
@@ -29,25 +48,54 @@ class Client
     /**
      * @return mixed
      */
-    public function getTId()
+    public function getTid()
     {
-        return $this->tId;
+        return $this->tid;
+    }
+    
+    /**
+     * @param mixed $tid
+     */
+    public function setTid($tid)
+    {
+        $this->tId = $tid;
+    }
+
+    public function init(
+        $kSig,
+        $tid,
+        $wsdl,
+        $soapOptions = array(
+            'compression' => SOAP_COMPRESSION_ACCEPT,
+            'soap_version' => SOAP_1_1,
+        )
+    ) {
+        $this->kSig = $kSig;
+        $this->tid = $tid;
+        $this->soapClient = $this->getClient($wsdl, $soapOptions);
+    }
+
+    protected function getClient($wsdl, $soapOptions)
+    {
+        return new \SoapClient($wsdl, $soapOptions);
     }
 
     /**
-     * @param mixed $tId
+     * @param InitRequest $request
+     * @return InitResponse
+     * @throws \Exception
      */
-    public function setTId($tId)
+    public function paymentInit(InitRequest $request)
     {
-        $this->tId = $tId;
-    }
+        if (!$this->canExecute()) {
+            throw new \Exception("Please set tid and ksig before this call.");
+        }
+        $request->setTid($this->tid);
+        $request->sign($this->kSig);
 
-    /**
-     * @param \SoapClient $soapClient
-     */
-    public function __construct(\SoapClient $soapClient)
-    {
-        $this->soapClient = $soapClient;
+        $response = new InitResponse($this->logger);
+        $response->fromArray($this->soapClient->init(array('request' => ($request->toArray()))));
+        return $response;
     }
 
     /**
@@ -55,44 +103,25 @@ class Client
      */
     protected function canExecute()
     {
-        return isset($this->tId) && isset($this->kSig);
+        return isset($this->tid) && isset($this->kSig);
     }
 
     /**
-     * @param PaymentInitRequest $request
-     * @return \PaymentInitResponse
+     * @param VerifyRequest $request
+     * @return VerifyResponse
      * @throws \Exception
      */
-    public function paymentInit(PaymentInitRequest $request)
+    public function paymentVerify(VerifyRequest $request)
     {
         if (!$this->canExecute()) {
             throw new \Exception("Please set tid and ksig before this call.");
         }
 
-        $request->setTid($this->tId);
+        $request->setTid($this->tid);
         $request->sign($this->kSig);
 
-        $response = new \PaymentInitResponse();
-        $response->fromArray($this->soapClient->init($request->toArray()));
-        return $response;
-    }
-
-    /**
-     * @param PaymentVerifyRequest $request
-     * @return \PaymentVerifyResponse
-     * @throws \Exception
-     */
-    public function paymentVerify(PaymentVerifyRequest $request)
-    {
-        if (!$this->canExecute()) {
-            throw new \Exception("Please set tid and ksig before this call.");
-        }
-
-        $request->setTid($this->tId);
-        $request->sign($this->kSig);
-
-        $response = new \PaymentVerifyResponse();
-        $response->fromArray($this->client->verify($request->toArray()));
+        $response = new VerifyResponse($this->logger);
+        $response->fromArray($this->soapClient->verify($request->toArray()));
         return $response;
     }
 }

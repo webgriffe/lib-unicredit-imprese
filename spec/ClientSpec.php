@@ -4,7 +4,7 @@ namespace spec\Webgriffe\LibUnicreditImprese;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Webgriffe\LibUnicreditImprese\PaymentInitRequest;
+use Webgriffe\LibUnicreditImprese\PaymentInit\Request;
 use spec\Webgriffe\LibUnicreditImprese;
 
 class ClientSpec extends ObjectBehavior
@@ -19,7 +19,7 @@ class ClientSpec extends ObjectBehavior
     {
         $soapClient->beADoubleOf('\SoapClient');
         $this->beConstructedWith($soapClient);
-        $this->init(new PaymentInitRequest());
+        $this->init(new Request());
         $this->shouldThrow(new \Exception(""))->duringInit();
     }
 

@@ -14,12 +14,12 @@ class PaymentInitRequestSpec extends ObjectBehavior
     function it_is_initializable(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
     {
         $this->beConstructedWith($logger, $signatureCalculator, $requestValidator);
-        $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInitRequest');
+        $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Request');
     }
 
     function it_should_init_from_array(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
     {
-        $requestValidator->beADoubleOf('Webgriffe\LibUnicreditImprese\PaymentInitRequestValidator');
+        $requestValidator->beADoubleOf('Webgriffe\LibUnicreditImprese\PaymentInit\RequestValidator');
 
         $this->beConstructedWith($logger, $signatureCalculator, $requestValidator);
         $data = $this->getValidInitArray();
@@ -44,7 +44,7 @@ class PaymentInitRequestSpec extends ObjectBehavior
 
     function it_throws_an_exception_on_init_from_invalid_array(LoggerInterface $logger, SignatureCalculatorInterface $signatureCalculator, RequestValidatorInterface $requestValidator)
     {
-        $requestValidator->beADoubleOf('Webgriffe\LibUnicreditImprese\PaymentInitRequestValidator');
+        $requestValidator->beADoubleOf('Webgriffe\LibUnicreditImprese\PaymentInit\RequestValidator');
         $this->beConstructedWith($logger, $signatureCalculator, $requestValidator);
         $data = array();
         $requestValidator->validate($data)->willReturn(false);

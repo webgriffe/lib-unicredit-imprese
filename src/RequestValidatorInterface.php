@@ -10,7 +10,8 @@ namespace Webgriffe\LibUnicreditImprese;
 interface RequestValidatorInterface
 {
     /**
-     * @return bool
+     * @param array $data
+     * @return mixed
      */
     public function validate(array $data);
 }

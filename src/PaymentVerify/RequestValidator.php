@@ -5,9 +5,11 @@
  * Date: 30/03/16
  * Time: 12.02
  */
-namespace Webgriffe\LibUnicreditImprese;
+namespace Webgriffe\LibUnicreditImprese\PaymentVerify;
 
-class PaymentVerifyRequestValidator implements RequestValidatorInterface
+use Webgriffe\LibUnicreditImprese\RequestValidatorInterface;
+
+class RequestValidator implements RequestValidatorInterface
 {
     protected $mandatoryFields = array(
         "Tid",

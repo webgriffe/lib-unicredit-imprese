@@ -1,8 +1,10 @@
 <?php
 
-namespace Webgriffe\LibUnicreditImprese;
+namespace Webgriffe\LibUnicreditImprese\PaymentVerify;
 
-class PaymentInitResponse
+use Webgriffe\LibUnicreditImprese\PaymentResponse;
+
+class Response extends PaymentResponse
 {
     protected $error;
     protected $rc;
