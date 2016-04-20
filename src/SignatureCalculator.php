@@ -2,15 +2,15 @@
 
 namespace Webgriffe\LibUnicreditImprese;
 
-class SignatureCalculator implements SignatureCalculatorInterface
+class SignatureCalculator
 {
     /**
-     * @param $data
+     * @param $signable
      * @param $key
      * @return string
      */
-    public function calculate($data, $key, $method = 'sha256')
+    public function sign(SignableInterface $signable, $key, $method = 'sha256')
     {
-        return base64_encode(hash_hmac($method, $data, $key, true));
+        $signable->setSignature(base64_encode(hash_hmac($method, $signable->getSignatureData(), $key, true)));
     }
 }

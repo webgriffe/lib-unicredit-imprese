@@ -10,12 +10,22 @@ namespace Webgriffe\LibUnicreditImprese;
 
 use Psr\Log\LoggerInterface;
 
-class PaymentResponse
+abstract class PaymentResponse
 {
-    protected $logger;
-
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct(\stdClass $data, LoggerInterface $logger = null)
     {
-        $this->logger = $logger;
+        if ($data->response->error) {
+            if ($logger) {
+                $logger->critical('Webservice error, description:' . $data->errorDesc);
+            }
+            throw new \LogicException("Webservice error.");
+        }
+        $this->fromArray($data);
     }
+
+    /**
+     * @param \stdClass $data
+     * @return void
+     */
+    protected abstract function initFromRawSoapResponse(\stdClass $data);
 }

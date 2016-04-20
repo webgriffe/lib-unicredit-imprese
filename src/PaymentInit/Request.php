@@ -4,13 +4,23 @@ namespace Webgriffe\LibUnicreditImprese\PaymentInit;
 
 use Psr\Log\LoggerInterface;
 use Webgriffe\LibUnicreditImprese\PaymentRequest;
+use Webgriffe\LibUnicreditImprese\SignableInterface;
 
-class Request extends PaymentRequest
+class Request implements SignableInterface
 {
     /**
      * @var string
      */
     protected $signature;
+
+    /**
+     * @param $signature
+     * @return void
+     */
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+    }
 
     /**
      * @var string
@@ -437,31 +447,6 @@ class Request extends PaymentRequest
         return $data;
     }
 
-    /**
-     * @Array $data
-     */
-    public function fromArray($data)
-    {
-        $this->shopId = $data["shopID"];
-        $this->shopUserRef = $data["shopUserRef"];
-        $this->shopUserName = $data["shopUserName"];
-        $this->shopUserAccount = $data["shopUserAccount"];
-        $this->trType = $data["trType"];
-        $this->amount = $data["amount"];
-        $this->currencyCode = $data["currencyCode"];
-        $this->langId = $data["langID"];
-        $this->notifyUrl = $data["notifyURL"];
-        $this->errorUrl = $data["errorURL"];
-        $this->addInfo1 = $data["addInfo1"];
-        $this->addInfo2 = $data["addInfo2"];
-        $this->addInfo3 = $data["addInfo3"];
-        $this->addInfo4 = $data["addInfo4"];
-        $this->addInfo5 = $data["addInfo5"];
-        $this->description = $data["Description"];
-        $this->recurrent = $data["Recurrent"];
-        $this->freeText = $data["FreeText"];
-    }
-
     public function toArray()
     {
         return array(
@@ -486,30 +471,5 @@ class Request extends PaymentRequest
             'Recurrent'       => $this->recurrent,
             'FreeText'        => $this->freeText,
         );
-    }
-
-    public function reset()
-    {
-        $this->tid =
-        $this->shopId =
-        $this->shopUserRef =
-        $this->shopUserName =
-        $this->shopUserAccount =
-        $this->trType =
-        $this->amount =
-        $this->currencyCode =
-        $this->langId =
-        $this->notifyUrl =
-        $this->errorUrl =
-        $this->addInfo1 =
-        $this->addInfo2 =
-        $this->addInfo3 =
-        $this->addInfo4 =
-        $this->addInfo5 =
-        $this->description =
-        $this->recurrent =
-        $this->freeText =
-        $this->signature =
-            null;
     }
 }

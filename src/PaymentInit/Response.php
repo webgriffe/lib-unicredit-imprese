@@ -6,6 +6,7 @@ use Webgriffe\LibUnicreditImprese\PaymentResponse;
 
 class Response extends PaymentResponse
 {
+    protected $tid;
     protected $error;
     protected $rc;
     protected $errorDesc;
@@ -93,17 +94,12 @@ class Response extends PaymentResponse
     }
 
     /**
-     * @param \stdClass $soapResponse
+     * @inheritdoc
      */
-    public function fromArray($soapResponse)
+    protected function initFromRawSoapResponse(\stdClass $soapResponse)
     {
         $data = $soapResponse->response;
-        if ($soapResponse->response->error) {
-            $this->logger->warning('Webservice error, description:'. $data->errorDesc);
-            throw new LogicException("Webservice error.");
-        }
 
-        
         $this->tid = $data->tid;
         $this->rc = $data->rc;
         $this->error = $data->error;

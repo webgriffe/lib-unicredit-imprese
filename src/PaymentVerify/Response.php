@@ -143,8 +143,12 @@ class Response extends PaymentResponse
     protected $authStatus;
     protected $brand;
 
-    public function fromArray($data)
+    /**
+     * @inheritdoc
+     */
+    protected function initFromRawSoapResponse(\stdClass $data)
     {
+        //@todo fix it
         $this->error = $data["Error"];
         $this->rc = $data["Rc"];
         $this->errorDesc = $data["ErrorDesc"];

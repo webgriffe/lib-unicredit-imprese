@@ -7,12 +7,16 @@
  */
 namespace Webgriffe\LibUnicreditImprese;
 
-interface PaymentRequestInterface
+interface SignableInterface
 {
     /**
      * @return string
      */
     public function getSignatureData();
 
-    public function sign($key);
+    /**
+     * @param $param
+     * @return mixed
+     */
+    public function setSignature($param);
 }

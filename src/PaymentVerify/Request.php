@@ -4,9 +4,19 @@ namespace Webgriffe\LibUnicreditImprese\PaymentVerify;
 
 use Psr\Log\LoggerInterface;
 use Webgriffe\LibUnicreditImprese\PaymentRequest;
+use Webgriffe\LibUnicreditImprese\SignableInterface;
 
-class Request extends PaymentRequest
+class Request implements SignableInterface
 {
+    /**
+     * @param string $signature
+     * @return void
+     */
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+    }
+
     /**
      * @var string
      */
@@ -72,14 +82,9 @@ class Request extends PaymentRequest
         $this->paymentId = $paymentId;
     }
 
-    public function reset()
-    {
-        $this->tid =
-        $this->shopId =
-        $this->paymentId =
-        $this->signature = null;
-    }
-
+    /**
+     * @return string
+     */
     public function getSignatureData()
     {
         return $this->tid . $this->shopId . $this->paymentId;
