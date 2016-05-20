@@ -100,7 +100,6 @@ class Response extends PaymentResponse
     {
         $data = $soapResponse->response;
 
-        $this->tid = $data->tid;
         $this->rc = $data->rc;
         $this->error = $data->error;
         $this->errorDesc = $data->errorDesc;

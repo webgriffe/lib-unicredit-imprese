@@ -8,14 +8,6 @@ use Webgriffe\LibUnicreditImprese\SignableInterface;
 
 class Request implements SignableInterface
 {
-    /**
-     * @param string $signature
-     * @return void
-     */
-    public function setSignature($signature)
-    {
-        $this->signature = $signature;
-    }
 
     /**
      * @var string
@@ -58,6 +50,16 @@ class Request implements SignableInterface
         return $this->shopId;
     }
 
+
+    /**
+     * @param string $signature
+     * @return void
+     */
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+    }
+
     /**
      * @param mixed $shopId
      */
@@ -88,5 +90,17 @@ class Request implements SignableInterface
     public function getSignatureData()
     {
         return $this->tid . $this->shopId . $this->paymentId;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            "Tid"       => $this->tid,
+            "ShopID"    => $this->shopId,
+            "PaymentID" => $this->paymentId
+        );
     }
 }

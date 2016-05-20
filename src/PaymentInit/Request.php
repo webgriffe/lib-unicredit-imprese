@@ -11,16 +11,12 @@ class Request implements SignableInterface
     /**
      * @var string
      */
-    protected $signature;
+    protected $trType;
 
     /**
-     * @param $signature
-     * @return void
+     * @var string
      */
-    public function setSignature($signature)
-    {
-        $this->signature = $signature;
-    }
+    protected $signature;
 
     /**
      * @var string
@@ -419,10 +415,13 @@ class Request implements SignableInterface
     }
 
     /**
-     * @var string
+     * @param $signature
+     * @return void
      */
-    protected $trType;
-
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+    }
     /**
      * @return string
      */
@@ -449,7 +448,7 @@ class Request implements SignableInterface
 
     public function toArray()
     {
-        return array(
+        $data = array(
             'signature'       => $this->signature,
             'tid'             => $this->tid,
             'shopID'          => $this->shopId,
@@ -471,5 +470,6 @@ class Request implements SignableInterface
             'Recurrent'       => $this->recurrent,
             'FreeText'        => $this->freeText,
         );
+        return $data;
     }
 }

@@ -80,11 +80,12 @@ class Client
             'soap_version' => SOAP_1_1,
         );
         if (!extension_loaded('soap')) {
-            if($this->logger)
+            if ($this->logger) {
                 $this->logger->critical(
                     "Non è stato possibile creare il client per il webserver." .
                     "\nL\'estensione PHP_SOAP è necessaria per il funzionamento del modulo"
                 );
+            }
 
             throw new \RuntimeException('PHP SOAP extension is required.');
         }
@@ -150,8 +151,7 @@ class Client
         $freeText = null
     ) {
         //@todo validation
-        if(empty($trType) || empty($amount) || empty($langId) || empty($notifyUrl) || empty($errorUrl))
-        {
+        if (empty($trType) || empty($amount) || empty($langId) || empty($notifyUrl) || empty($errorUrl)) {
             throw new \InvalidArgumentException("Cannot invoke webservice, some mandatory field is missing");
         }
 
@@ -179,7 +179,8 @@ class Client
         $signatureCalculator = new SignatureCalculator();
         $signatureCalculator->sign($request, $this->kSig);
         return new InitResponse(
-            $this->soapClient->init(array('request' => ($request->toArray()))), $this->logger
+            $this->soapClient->init(array('request' => ($request->toArray()))),
+            $this->logger
         );
     }
 
@@ -205,7 +206,8 @@ class Client
         $signatureCalculator = new SignatureCalculator();
         $signatureCalculator->sign($request, $this->kSig);
         return new VerifyResponse(
-            $this->soapClient->verify(array('request'=>$request->toArray())), $this->logger
+            $this->soapClient->verify(array('request'=>$request->toArray())),
+            $this->logger
         );
     }
 }

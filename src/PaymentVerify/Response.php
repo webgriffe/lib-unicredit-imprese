@@ -9,6 +9,11 @@ class Response extends PaymentResponse
     protected $error;
     protected $rc;
     protected $errorDesc;
+    protected $tranId;
+    protected $authCode;
+    protected $enrStatus;
+    protected $authStatus;
+    protected $brand;
 
     /**
      * @return boolean
@@ -137,11 +142,7 @@ class Response extends PaymentResponse
     {
         $this->brand = $brand;
     }
-    protected $tranId;
-    protected $authCode;
-    protected $enrStatus;
-    protected $authStatus;
-    protected $brand;
+
 
     /**
      * @inheritdoc

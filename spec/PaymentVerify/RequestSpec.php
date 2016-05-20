@@ -13,7 +13,25 @@ class RequestSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->beConstructedWith();
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentVerify\Request');
+    }
+
+    function it_can_generate_signature_data()
+    {
+        $this->setTid(1);
+        $this->setShopId(2);
+        $this->setPaymentId(3);
+        $this->getSignatureData()->shouldBeEqualTo("123");
+    }
+
+    function it_can_to_array()
+    {
+        $this->setTid('tid');
+        $this->setShopId('shopid');
+        $this->setPaymentId('paymentid');
+        $this->toArray()->shouldHaveKeyWithValue('Tid', 'tid');
+        $this->toArray()->shouldHaveKeyWithValue('ShopID', 'shopid');
+        $this->toArray()->shouldHaveKeyWithValue('PaymentID', 'paymentid');
+        
     }
 }

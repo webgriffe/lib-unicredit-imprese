@@ -12,6 +12,11 @@ use Psr\Log\LoggerInterface;
 
 abstract class PaymentResponse
 {
+    /**
+     * PaymentResponse constructor.
+     * @param \stdClass $data
+     * @param LoggerInterface|null $logger
+     */
     public function __construct(\stdClass $data, LoggerInterface $logger = null)
     {
         if ($data->response->error) {
@@ -20,12 +25,12 @@ abstract class PaymentResponse
             }
             throw new \LogicException("Webservice error.");
         }
-        $this->fromArray($data);
+        $this->initFromRawSoapResponse($data);
     }
 
     /**
      * @param \stdClass $data
      * @return void
      */
-    protected abstract function initFromRawSoapResponse(\stdClass $data);
+    abstract protected function initFromRawSoapResponse(\stdClass $data);
 }
