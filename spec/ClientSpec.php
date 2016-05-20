@@ -23,20 +23,22 @@ class ClientSpec extends ObjectBehavior
         $this->shouldThrow(new \Exception(""))->duringInit();
     }
 
-    function payment_init_should_return_payment_init_response(LoggerInterface $logger)
+    function payment_init_should_return_payment_init_response()
     {
+        $soapClient = null;
         $soapClient->beADoubleOf('\SoapClient');
         $soapClient->paymentInit()->willReturn($this->getSoapInitResponse());
         $this->paymentInit()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
     }
 
-    function payment_verify_should_return_payment_verify_response(LoggerInterface $logger)
+    function payment_verify_should_return_payment_verify_response()
     {
+        $soapClient = null;
         $soapClient->beADoubleOf('\SoapClient');
         $soapClient->paymentInit()->willReturn($this->getSoapVerifyResponse());
         $this->paymentVerify()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentVerify\Response');
     }
-
+    
     function getSoapInitResponse()
     {
         $data = array();

@@ -5,9 +5,9 @@ namespace Webgriffe\LibUnicreditImprese;
 class SignatureCalculator
 {
     /**
-     * @param $signable
+     * @param SignableInterface $signable
      * @param $key
-     * @return string
+     * @param string $method
      */
     public function sign(SignableInterface $signable, $key, $method = 'sha256')
     {

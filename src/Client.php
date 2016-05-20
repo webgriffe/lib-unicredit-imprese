@@ -192,23 +192,20 @@ class Client
     }
 
     /**
-     * @param VerifyRequest $request
+     * @param $shopId
+     * @param $paymentId
      * @return VerifyResponse
-     * @throws \Exception
      */
-    public function paymentVerify(VerifyRequest $request)
+    public function paymentVerify($shopId, $paymentId)
     {
-        /* @todo finish refactor
-        if (!$this->canExecute()) {
-            throw new \Exception("Please set tid and ksig before this call.");
-        }
-
-        $request->setTid($this->tid);
-        $request->sign($this->kSig);
-
-        $response = new VerifyResponse($this->logger);
-        $response->fromArray($this->soapClient->verify($request->toArray()));
-        return $response;
-        */
+        $request = new VerifyRequest();
+        $request->setTid($this->tId);
+        $request->setShopId($shopId);
+        $request->setPaymentId($paymentId);
+        $signatureCalculator = new SignatureCalculator();
+        $signatureCalculator->sign($request, $this->kSig);
+        return new VerifyResponse(
+            $this->soapClient->verify(array('request'=>$request->toArray())), $this->logger
+        );
     }
 }
