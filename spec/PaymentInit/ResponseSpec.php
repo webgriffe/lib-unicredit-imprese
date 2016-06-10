@@ -25,18 +25,11 @@ class ResponseSpec extends ObjectBehavior
 
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
         $this->getRc()->shouldBe("RC");
-        $this->getError()->shouldBe("");
+        $this->getError()->shouldBe("false");
         $this->getErrorDesc()->shouldBe("ERROR_DESC");
         $this->getPaymentId()->shouldBe("PAYMENT_ID");
         $this->getRedirectUrl()->shouldBe("REDIRECT_URL");
-    }
-
-    function it_should_throw_an_exception_on_ko_response()
-    {
-        $soapResponse = new \stdClass();
-        $soapResponse->response = $this->getKORawResponse();
-        $this->beConstructedWith($soapResponse);
-        $this->shouldThrow(new \LogicException("Webservice error."))->duringInstantiation();
+        $this->getShopId()->shouldBe("SHOPID");
     }
 
     function getKORawResponse()
@@ -44,10 +37,13 @@ class ResponseSpec extends ObjectBehavior
         $response = new \stdClass();
 
         $response->rc = "RC";
-        $response->error = "True";
+        $response->error = "true";
         $response->errorDesc = "ERROR_DESC";
-        $response->paymentId = "PAYMENT_ID";
+        $response->signature = "SIGNATURE";
+        $response->shopID = "SHOPID";
+        $response->paymentID = "PAYMENT_ID";
         $response->redirectURL = "REDIRECT_URL";
+
         return $response;
     }
 
@@ -56,10 +52,13 @@ class ResponseSpec extends ObjectBehavior
         $response = new \stdClass();
 
         $response->rc = "RC";
-        $response->error = "";
+        $response->error = "false";
         $response->errorDesc = "ERROR_DESC";
-        $response->paymentId = "PAYMENT_ID";
+        $response->signature = "SIGNATURE";
+        $response->shopID = "SHOPID";
+        $response->paymentID = "PAYMENT_ID";
         $response->redirectURL = "REDIRECT_URL";
+
         return $response;
     }
 

@@ -13,6 +13,23 @@ class Response extends PaymentResponse
     protected $paymentId;
     protected $redirectUrl;
     protected $signature;
+    protected $shopId;
+
+    /**
+     * @return mixed
+     */
+    public function getShopId()
+    {
+        return $this->shopId;
+    }
+
+    /**
+     * @param mixed $shopId
+     */
+    public function setShopId($shopId)
+    {
+        $this->shopId = $shopId;
+    }
 
     /**
      * @return mixed

@@ -29,9 +29,9 @@ class RequestSpec extends ObjectBehavior
         $this->setTid('tid');
         $this->setShopId('shopid');
         $this->setPaymentId('paymentid');
-        $this->toArray()->shouldHaveKeyWithValue('Tid', 'tid');
-        $this->toArray()->shouldHaveKeyWithValue('ShopID', 'shopid');
-        $this->toArray()->shouldHaveKeyWithValue('PaymentID', 'paymentid');
+        $this->toArray()->shouldHaveKeyWithValue('tid', 'tid');
+        $this->toArray()->shouldHaveKeyWithValue('shopID', 'shopid');
+        $this->toArray()->shouldHaveKeyWithValue('paymentID', 'paymentid');
         
     }
 }
