@@ -2,7 +2,6 @@
 
 namespace Webgriffe\LibUnicreditImprese\PaymentVerify;
 
-use Psr\Log\LoggerInterface;
 use Webgriffe\LibUnicreditImprese\PaymentRequest;
 use Webgriffe\LibUnicreditImprese\SignableInterface;
 
@@ -91,16 +90,17 @@ class Request implements SignableInterface
     {
         return $this->tid . $this->shopId . $this->paymentId;
     }
-
+    
     /**
      * @return array
      */
     public function toArray()
     {
         return array(
-            "Tid"       => $this->tid,
-            "ShopID"    => $this->shopId,
-            "PaymentID" => $this->paymentId
+            'signature' => $this->signature,
+            'tid'       => $this->tid,
+            'shopID'    => $this->shopId,
+            'paymentID' => $this->paymentId
         );
     }
 }

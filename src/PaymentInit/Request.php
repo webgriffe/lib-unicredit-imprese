@@ -2,7 +2,6 @@
 
 namespace Webgriffe\LibUnicreditImprese\PaymentInit;
 
-use Psr\Log\LoggerInterface;
 use Webgriffe\LibUnicreditImprese\PaymentRequest;
 use Webgriffe\LibUnicreditImprese\SignableInterface;
 

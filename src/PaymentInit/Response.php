@@ -12,6 +12,23 @@ class Response extends PaymentResponse
     protected $errorDesc;
     protected $paymentId;
     protected $redirectUrl;
+    protected $signature;
+
+    /**
+     * @return mixed
+     */
+    public function getSignature()
+    {
+        return $this->signature;
+    }
+
+    /**
+     * @param mixed $signature
+     */
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+    }
     
     /**
      * @return bool
@@ -103,7 +120,9 @@ class Response extends PaymentResponse
         $this->rc = $data->rc;
         $this->error = $data->error;
         $this->errorDesc = $data->errorDesc;
-        $this->paymentId = $data->paymentId;
+        $this->signature = $data->signature;
+        $this->shopId = $data->shopID;
+        $this->paymentId = $data->paymentID;
         $this->redirectUrl = $data->redirectURL;
     }
 }

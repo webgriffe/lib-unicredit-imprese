@@ -6,8 +6,8 @@ use Webgriffe\LibUnicreditImprese\PaymentResponse;
 
 class Response extends PaymentResponse
 {
-    protected $error;
     protected $rc;
+    protected $error;
     protected $errorDesc;
     protected $tranId;
     protected $authCode;
@@ -15,8 +15,145 @@ class Response extends PaymentResponse
     protected $authStatus;
     protected $brand;
 
+    protected $maskedPan;
+    protected $payInstrToken;
+    protected $expireMonth;
+    protected $expireYear;
+    protected $status;
+    protected $payInstr;
+    protected $shopId;
+    protected $paymentId;
+
     /**
-     * @return boolean
+     * @return mixed
+     */
+    public function getPayInstr()
+    {
+        return $this->payInstr;
+    }
+
+    /**
+     * @param mixed $payInstr
+     */
+    public function setPayInstr($payInstr)
+    {
+        $this->payInstr = $payInstr;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShopId()
+    {
+        return $this->shopId;
+    }
+
+    /**
+     * @param mixed $shopId
+     */
+    public function setShopId($shopId)
+    {
+        $this->shopId = $shopId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaymentId()
+    {
+        return $this->paymentId;
+    }
+
+    /**
+     * @param mixed $paymentId
+     */
+    public function setPaymentId($paymentId)
+    {
+        $this->paymentId = $paymentId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaskedPan()
+    {
+        return $this->maskedPan;
+    }
+
+    /**
+     * @param mixed $maskedPan
+     */
+    public function setMaskedPan($maskedPan)
+    {
+        $this->maskedPan = $maskedPan;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPayInstrToken()
+    {
+        return $this->payInstrToken;
+    }
+
+    /**
+     * @param mixed $payInstrToken
+     */
+    public function setPayInstrToken($payInstrToken)
+    {
+        $this->payInstrToken = $payInstrToken;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpireMonth()
+    {
+        return $this->expireMonth;
+    }
+
+    /**
+     * @param mixed $expireMonth
+     */
+    public function setExpireMonth($expireMonth)
+    {
+        $this->expireMonth = $expireMonth;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpireYear()
+    {
+        return $this->expireYear;
+    }
+
+    /**
+     * @param mixed $expireYear
+     */
+    public function setExpireYear($expireYear)
+    {
+        $this->expireYear = $expireYear;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
      */
     public function getError()
     {
@@ -24,7 +161,7 @@ class Response extends PaymentResponse
     }
 
     /**
-     * @param boolean $error
+     * @param mixed $error
      */
     public function setError($error)
     {
@@ -143,20 +280,27 @@ class Response extends PaymentResponse
         $this->brand = $brand;
     }
 
-
     /**
      * @inheritdoc
      */
-    protected function initFromRawSoapResponse(\stdClass $data)
+    protected function initFromRawSoapResponse(\stdClass $soapResponse)
     {
-        //@todo fix it
-        $this->error = $data["Error"];
-        $this->rc = $data["Rc"];
-        $this->errorDesc = $data["ErrorDesc"];
-        $this->tranId = $data["TranId"];
-        $this->authCode = $data["AuthCode"];
-        $this->enrStatus = $data["ErnStatus"];
-        $this->authStatus = $data["AuthStatus"];
-        $this->brand = $data["Brand"];
+        $data = $soapResponse->response;
+        $this->payInstr = $data->payInstr;
+        $this->rc = $data->rc;
+        $this->error = $data->error;
+        $this->errorDesc = $data->errorDesc;
+        $this->shopId = $data->shopID;
+        $this->tranId = $data->tranID;
+        $this->paymentId = $data->paymentID;
+        $this->authCode = $data->authCode;
+        $this->enrStatus = $data->enrStatus;
+        $this->authStatus = $data->authStatus;
+        $this->brand = $data->brand;
+        $this->maskedPan = $data->maskedPan;
+        $this->payInstrToken = $data->payInstrToken;
+        $this->expireMonth = $data->expireMonth;
+        $this->expireYear = $data->expireYear;
+        $this->status = $data->status;
     }
 }

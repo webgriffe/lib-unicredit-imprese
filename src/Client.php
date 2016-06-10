@@ -20,6 +20,10 @@ class Client
     const TRANSACTION_TYPE_PURCHASE = 'PURCHASE';
     const CURRENCY_CODE_EUR = 'EUR';
     const CURRENCY_CODE_USD = 'USD';
+    const TRANSACTION_IN_PROGRESS_RETURN_CODE = 'IGFS_814';
+    const LANGUAGE_ITA = 'IT';
+    const LANGUAGE_ENG = 'EN';
+    
     protected $logger;
     protected $kSig;
     protected $tid;
@@ -86,7 +90,6 @@ class Client
                     "\nL\'estensione PHP_SOAP è necessaria per il funzionamento del modulo"
                 );
             }
-
             throw new \RuntimeException('PHP SOAP extension is required.');
         }
         if ($isTestMode) {
@@ -154,6 +157,12 @@ class Client
         if (empty($trType) || empty($amount) || empty($langId) || empty($notifyUrl) || empty($errorUrl)) {
             throw new \InvalidArgumentException("Cannot invoke webservice, some mandatory field is missing");
         }
+        
+        $currencyCode = strtoupper($currencyCode);
+        if ($currencyCode != self::CURRENCY_CODE_EUR && $currencyCode != self::CURRENCY_CODE_USD) {
+            throw new \InvalidArgumentException(sprintf('Unsupported currency specified %s.', $currencyCode));
+        }
+
 
         $request = new InitRequest();
 
@@ -179,7 +188,9 @@ class Client
         $signatureCalculator = new SignatureCalculator();
         $signatureCalculator->sign($request, $this->kSig);
         return new InitResponse(
-            $this->soapClient->init(array('request' => ($request->toArray()))),
+            $this->soapClient->init(
+                array('request' => ($request->toArray()))
+            ),
             $this->logger
         );
     }
@@ -200,13 +211,15 @@ class Client
     public function paymentVerify($shopId, $paymentId)
     {
         $request = new VerifyRequest();
-        $request->setTid($this->tId);
+        $request->setTid($this->tid);
         $request->setShopId($shopId);
         $request->setPaymentId($paymentId);
         $signatureCalculator = new SignatureCalculator();
         $signatureCalculator->sign($request, $this->kSig);
+        $request = array('request'=>($request->toArray()));
+        $this->logger->debug(print_r($request, true));
         return new VerifyResponse(
-            $this->soapClient->verify(array('request'=>$request->toArray())),
+            $this->soapClient->verify($request),
             $this->logger
         );
     }
