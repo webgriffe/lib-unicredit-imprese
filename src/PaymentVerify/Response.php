@@ -14,7 +14,7 @@ class Response extends PaymentResponse
     protected $enrStatus;
     protected $authStatus;
     protected $brand;
-
+    protected $signature;
     protected $maskedPan;
     protected $payInstrToken;
     protected $expireMonth;
@@ -24,6 +24,24 @@ class Response extends PaymentResponse
     protected $shopId;
     protected $paymentId;
 
+
+
+    /**
+     * @return mixed
+     */
+    public function getSignature()
+    {
+        return $this->signature;
+    }
+
+    /**
+     * @param mixed $signature
+     */
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+    }
+    
     /**
      * @return mixed
      */
@@ -286,21 +304,27 @@ class Response extends PaymentResponse
     protected function initFromRawSoapResponse(\stdClass $soapResponse)
     {
         $data = $soapResponse->response;
-        $this->payInstr = $data->payInstr;
+
+        $this->tid = $data->tid;
         $this->rc = $data->rc;
         $this->error = $data->error;
         $this->errorDesc = $data->errorDesc;
+        $this->signature = $data->signature;
         $this->shopId = $data->shopID;
-        $this->tranId = $data->tranID;
         $this->paymentId = $data->paymentID;
-        $this->authCode = $data->authCode;
-        $this->enrStatus = $data->enrStatus;
-        $this->authStatus = $data->authStatus;
-        $this->brand = $data->brand;
-        $this->maskedPan = $data->maskedPan;
-        $this->payInstrToken = $data->payInstrToken;
-        $this->expireMonth = $data->expireMonth;
-        $this->expireYear = $data->expireYear;
-        $this->status = $data->status;
+        if(!$this->error){
+            $this->payInstr = $data->payInstr;
+            $this->tranId = $data->tranID;
+            $this->authCode = $data->authCode;
+            $this->enrStatus = $data->enrStatus;
+            $this->authStatus = $data->authStatus;
+            $this->brand = $data->brand;
+            $this->maskedPan = $data->maskedPan;
+            $this->payInstrToken = $data->payInstrToken;
+            $this->expireMonth = $data->expireMonth;
+            $this->expireYear = $data->expireYear;
+            $this->status = $data->status;
+            }
+        }
     }
-}
+
