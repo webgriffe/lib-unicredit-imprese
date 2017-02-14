@@ -324,7 +324,7 @@ class Response extends PaymentResponse
             $this->expireMonth = $data->expireMonth;
             $this->expireYear = $data->expireYear;
             $this->status = $data->status;
-            }
         }
     }
+}
 

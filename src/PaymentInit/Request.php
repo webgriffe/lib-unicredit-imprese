@@ -43,7 +43,7 @@ class Request implements SignableInterface
     protected $shopUserAccount;
 
     /**
-     * @var float
+     * @var integer
      */
     protected $amount;
 
@@ -194,15 +194,26 @@ class Request implements SignableInterface
      */
     public function getAmount()
     {
-        return $this->amount;
+        return $this->amount / 100;
     }
 
     /**
+     * Convert to "number of cents" representation. Beware of possible rounding errors.
+     *
      * @param float $amount
      */
     public function setAmount($amount)
     {
-        $this->amount = $amount;
+        $newAmount = $amount * 100;
+        if (round($newAmount) - $newAmount > 0.001) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Unicredit PagOnline Imprese only accepts amounts with up to 2 decimal places. %s given',
+                    $amount
+                )
+            );
+        }
+        $this->amount = round($newAmount);
     }
 
     /**

@@ -26,8 +26,20 @@ class Client
     
     protected $logger;
     protected $kSig;
+
+    /**
+     * @var string
+     */
     protected $tid;
-    protected $soapClient;
+
+    /**
+     * @var null|\SoapClient
+     */
+    protected $soapClient = null;
+
+    /**
+     * @var string
+     */
     protected $tId;
 
     /**
@@ -71,12 +83,8 @@ class Client
         $this->tId = $tid;
     }
 
-    public function init(
-        $isTestMode,
-        $kSig,
-        $tid,
-        $wsdl
-    ) {
+    public function init($isTestMode, $kSig, $tid, $wsdl)
+    {
         $this->kSig = $kSig;
         $this->tid = $tid;
         $soapOptions = array(
@@ -104,7 +112,12 @@ class Client
         $this->soapClient = $this->getClient($wsdl, $soapOptions);
     }
 
-    protected function getClient($wsdl, $soapOptions)
+    /**
+     * @param string $wsdl
+     * @param array $soapOptions
+     * @return \SoapClient
+     */
+    protected function getClient($wsdl, array $soapOptions)
     {
         return new \SoapClient($wsdl, $soapOptions);
     }
@@ -117,7 +130,7 @@ class Client
      * @param $shopUserName
      * @param $shopUserAccount
      * @param $trType
-     * @param $amount
+     * @param $floatAmount
      * @param $currencyCode
      * @param $langId
      * @param $notifyUrl
@@ -135,7 +148,7 @@ class Client
      */
     public function paymentInit(
         $trType,
-        $amount,
+        $floatAmount,
         $langId,
         $notifyUrl,
         $errorUrl,
@@ -154,7 +167,7 @@ class Client
         $freeText = null
     ) {
         //@todo validation
-        if (empty($trType) || empty($amount) || empty($langId) || empty($notifyUrl) || empty($errorUrl)) {
+        if (empty($trType) || empty($floatAmount) || empty($langId) || empty($notifyUrl) || empty($errorUrl)) {
             throw new \InvalidArgumentException("Cannot invoke webservice, some mandatory field is missing");
         }
         
@@ -163,30 +176,36 @@ class Client
             throw new \InvalidArgumentException(sprintf('Unsupported currency specified %s.', $currencyCode));
         }
 
+        try {
+            $request = new InitRequest();
 
-        $request = new InitRequest();
+            $request->setShopId($shopId);
+            $request->setShopUserRef($shopUserRef);
+            $request->setShopUserName($shopUserName);
+            $request->setShopUserAccount($shopUserAccount);
+            $request->setTrType($trType);
+            $request->setAmount($floatAmount);
+            $request->setCurrencyCode($currencyCode);
+            $request->setLangId($langId);
+            $request->setNotifyUrl($notifyUrl);
+            $request->setErrorUrl($errorUrl);
+            $request->setAddInfo1($addInfo1);
+            $request->setAddInfo2($addInfo2);
+            $request->setAddInfo3($addInfo3);
+            $request->setAddInfo4($addInfo4);
+            $request->setAddInfo5($addInfo5);
+            $request->setDescription($description);
+            $request->setRecurrent($recurrent);
+            $request->setFreeText($freeText);
+            $request->setTid($this->tid);
+        } catch (\Exception $ex) {
+            $this->logger->critical($ex->getMessage());
+            throw $ex;
+        }
 
-        $request->setShopId($shopId);
-        $request->setShopUserRef($shopUserRef);
-        $request->setShopUserName($shopUserName);
-        $request->setShopUserAccount($shopUserAccount);
-        $request->setTrType($trType);
-        $request->setAmount($amount);
-        $request->setCurrencyCode($currencyCode);
-        $request->setLangId($langId);
-        $request->setNotifyUrl($notifyUrl);
-        $request->setErrorUrl($errorUrl);
-        $request->setAddInfo1($addInfo1);
-        $request->setAddInfo2($addInfo2);
-        $request->setAddInfo3($addInfo3);
-        $request->setAddInfo4($addInfo4);
-        $request->setAddInfo5($addInfo5);
-        $request->setDescription($description);
-        $request->setRecurrent($recurrent);
-        $request->setFreeText($freeText);
-        $request->setTid($this->tid);
         $signatureCalculator = new SignatureCalculator();
         $signatureCalculator->sign($request, $this->kSig);
+
         return new InitResponse(
             $this->soapClient->init(
                 array('request' => ($request->toArray()))
