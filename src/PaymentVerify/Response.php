@@ -312,7 +312,7 @@ class Response extends PaymentResponse
         $this->signature = $data->signature;
         $this->shopId = $data->shopID;
         $this->paymentId = $data->paymentID;
-        if(!$this->error){
+        if (!$this->error){
             $this->payInstr = $data->payInstr;
             $this->tranId = $data->tranID;
             $this->authCode = $data->authCode;

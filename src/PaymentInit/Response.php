@@ -139,7 +139,10 @@ class Response extends PaymentResponse
         $this->errorDesc = $data->errorDesc;
         $this->signature = $data->signature;
         $this->shopId = $data->shopID;
-        $this->paymentId = $data->paymentID;
-        $this->redirectUrl = $data->redirectURL;
+
+        if (!$this->error) {
+            $this->paymentId = $data->paymentID;
+            $this->redirectUrl = $data->redirectURL;
+        }
     }
 }
