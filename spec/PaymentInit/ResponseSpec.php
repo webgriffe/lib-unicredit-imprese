@@ -16,7 +16,6 @@ class ResponseSpec extends ObjectBehavior
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
     }
 
-
     function it_should_initialize_from_raw_response()
     {
         $soapResponse = new \stdClass();
@@ -25,10 +24,23 @@ class ResponseSpec extends ObjectBehavior
 
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
         $this->getRc()->shouldBe("RC");
-        $this->getError()->shouldBe("false");
+        $this->getError()->shouldBe(false);
         $this->getErrorDesc()->shouldBe("ERROR_DESC");
         $this->getPaymentId()->shouldBe("PAYMENT_ID");
         $this->getRedirectUrl()->shouldBe("REDIRECT_URL");
+        $this->getShopId()->shouldBe("SHOPID");
+    }
+
+    function it_should_initialize_from_raw_error_response()
+    {
+        $soapResponse = new \stdClass();
+        $soapResponse->response = $this->getKORawResponse();
+        $this->beConstructedWith($soapResponse);
+
+        $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
+        $this->getRc()->shouldBe("RC");
+        $this->getError()->shouldBe(true);
+        $this->getErrorDesc()->shouldBe("ERROR_DESC");
         $this->getShopId()->shouldBe("SHOPID");
     }
 
@@ -37,12 +49,10 @@ class ResponseSpec extends ObjectBehavior
         $response = new \stdClass();
 
         $response->rc = "RC";
-        $response->error = "true";
+        $response->error = true;
         $response->errorDesc = "ERROR_DESC";
         $response->signature = "SIGNATURE";
         $response->shopID = "SHOPID";
-        $response->paymentID = "PAYMENT_ID";
-        $response->redirectURL = "REDIRECT_URL";
 
         return $response;
     }
@@ -52,7 +62,7 @@ class ResponseSpec extends ObjectBehavior
         $response = new \stdClass();
 
         $response->rc = "RC";
-        $response->error = "false";
+        $response->error = false;
         $response->errorDesc = "ERROR_DESC";
         $response->signature = "SIGNATURE";
         $response->shopID = "SHOPID";
@@ -61,5 +71,4 @@ class ResponseSpec extends ObjectBehavior
 
         return $response;
     }
-
 }

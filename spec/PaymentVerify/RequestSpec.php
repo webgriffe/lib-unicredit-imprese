@@ -32,6 +32,5 @@ class RequestSpec extends ObjectBehavior
         $this->toArray()->shouldHaveKeyWithValue('tid', 'tid');
         $this->toArray()->shouldHaveKeyWithValue('shopID', 'shopid');
         $this->toArray()->shouldHaveKeyWithValue('paymentID', 'paymentid');
-        
     }
 }

@@ -42,7 +42,7 @@ class ClientSpec extends ObjectBehavior
     function getSoapInitResponse()
     {
         $data = array();
-        $data["Error"] = "false";
+        $data["Error"] = false;
         $data["Rc"] = "tutto bene";
         $data["ErrorDesc"] = "error desc";
         $data["PaymentID"] = "9854";
@@ -62,6 +62,5 @@ class ClientSpec extends ObjectBehavior
         $data["AuthStatus"] = "";
         $data["Brand"] = "";
         return $data;
-
     }
 }

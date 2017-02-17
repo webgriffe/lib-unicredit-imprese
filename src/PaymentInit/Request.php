@@ -204,8 +204,10 @@ class Request implements SignableInterface
      */
     public function setAmount($amount)
     {
-        $newAmount = $amount * 100;
-        if (round($newAmount) - $newAmount > 0.001) {
+        $centsAmount = $amount * 100;
+        $newAmount = round($centsAmount);
+        //Make sure that the supplied amount contains no more than 2 decimal places
+        if (abs($newAmount - $centsAmount) > 0.0000000001) {
             throw new \RuntimeException(
                 sprintf(
                     'Unicredit PagOnline Imprese only accepts amounts with up to 2 decimal places. %s given',
@@ -213,7 +215,7 @@ class Request implements SignableInterface
                 )
             );
         }
-        $this->amount = round($newAmount);
+        $this->amount = $newAmount;
     }
 
     /**

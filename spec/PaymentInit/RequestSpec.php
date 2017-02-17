@@ -32,7 +32,7 @@ class RequestSpec extends ObjectBehavior
         $this->setAddInfo3(14);
         $this->setAddInfo4(15);
         $this->setAddInfo5(16);
-        $this->getSignatureData()->shouldBeEqualTo("12345678910111213141516");
+        $this->getSignatureData()->shouldBeEqualTo("1234567008910111213141516");
     }
 
     function it_can_to_array()
@@ -44,7 +44,7 @@ class RequestSpec extends ObjectBehavior
         $this->setShopUserName("shopusername");
         $this->setShopUserAccount("shopuseraccount");
         $this->setTrType("trtype");
-        $this->setAmount("amount");
+        $this->setAmount(15);
         $this->setCurrencyCode("currencycode");
         $this->setLangId("langid");
         $this->setNotifyUrl("notifyurl");
@@ -65,7 +65,7 @@ class RequestSpec extends ObjectBehavior
         $this->toArray()->shouldHaveKeyWithValue('shopUserName', 'shopusername');
         $this->toArray()->shouldHaveKeyWithValue('shopUserAccount', 'shopuseraccount');
         $this->toArray()->shouldHaveKeyWithValue('trType', 'trtype');
-        $this->toArray()->shouldHaveKeyWithValue('amount', 'amount');
+        $this->toArray()->shouldHaveKeyWithValue('amount', '1500'); //Converted to number of cents
         $this->toArray()->shouldHaveKeyWithValue('currencyCode', 'currencycode');
         $this->toArray()->shouldHaveKeyWithValue('langID', 'langid');
         $this->toArray()->shouldHaveKeyWithValue('notifyURL', 'notifyurl');
@@ -78,5 +78,11 @@ class RequestSpec extends ObjectBehavior
         $this->toArray()->shouldHaveKeyWithValue('Description', 'description');
         $this->toArray()->shouldHaveKeyWithValue('Recurrent', 'recurrent');
         $this->toArray()->shouldHaveKeyWithValue('FreeText', 'freetext');
+    }
+
+    function it_throws_exception_on_amount_with_more_than_2_decimal_places()
+    {
+        $this->setAmount(2.99);
+        $this->shouldThrow('RuntimeException')->duringSetAmount(2.991);
     }
 }
