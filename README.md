@@ -1,7 +1,7 @@
 Webgriffe UnicreditImprese PHP library
 ==========================================
 
-[![Run Status](https://api.shippable.com/projects/56fb7d7b9d043da07b092d74/badge?branch=master)](https://app.shippable.com/projects/56fb7d7b9d043da07b092d74)
+[![Run Status](https://travis-ci.org/webgriffe/lib-unicredit-imprese.svg?branch=master)](https://travis-ci.org/webgriffe/lib-unicredit-imprese)
 
 Development workflow:
 
