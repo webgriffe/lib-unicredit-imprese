@@ -10,20 +10,20 @@ use spec\Webgriffe\LibUnicreditImprese;
 
 class ClientSpec extends ObjectBehavior
 {
-    function it_is_initializable(LoggerInterface $logger)
+    public function it_is_initializable(LoggerInterface $logger)
     {
         $this->beConstructedWith($logger);
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\Client');
     }
 
-    function should_throw_exceptions_if_tid_missing(LoggerInterface $logger)
+    public function should_throw_exceptions_if_tid_missing(LoggerInterface $logger)
     {
         $this->beConstructedWith($logger);
         $this->paymentInit(new Request());
         $this->shouldThrow(new \Exception(""))->duringInit();
     }
 
-    function payment_init_should_return_payment_init_response()
+    public function payment_init_should_return_payment_init_response()
     {
         $soapClient = null;
         $soapClient->beADoubleOf('\SoapClient');
@@ -31,7 +31,7 @@ class ClientSpec extends ObjectBehavior
         $this->paymentInit()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
     }
 
-    function payment_verify_should_return_payment_verify_response()
+    public function payment_verify_should_return_payment_verify_response()
     {
         $soapClient = null;
         $soapClient->beADoubleOf('\SoapClient');
@@ -39,7 +39,7 @@ class ClientSpec extends ObjectBehavior
         $this->paymentVerify()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentVerify\Response');
     }
     
-    function getSoapInitResponse()
+    private function getSoapInitResponse()
     {
         $data = array();
         $data["Error"] = false;
@@ -50,7 +50,7 @@ class ClientSpec extends ObjectBehavior
         return $data;
     }
 
-    function getSoapVerifyResponse()
+    private function getSoapVerifyResponse()
     {
         $data = array();
         $data["Error"] = "";

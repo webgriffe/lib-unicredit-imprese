@@ -7,7 +7,7 @@ use Prophecy\Argument;
 
 class ResponseSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $soapResponse = new \stdClass();
         $soapResponse->response = $this->getOkRawResponse();
@@ -16,7 +16,7 @@ class ResponseSpec extends ObjectBehavior
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
     }
 
-    function it_should_initialize_from_raw_response()
+    public function it_should_initialize_from_raw_response()
     {
         $soapResponse = new \stdClass();
         $soapResponse->response = $this->getOkRawResponse();
@@ -31,7 +31,7 @@ class ResponseSpec extends ObjectBehavior
         $this->getShopId()->shouldBe("SHOPID");
     }
 
-    function it_should_initialize_from_raw_error_response()
+    public function it_should_initialize_from_raw_error_response()
     {
         $soapResponse = new \stdClass();
         $soapResponse->response = $this->getKORawResponse();
@@ -44,7 +44,7 @@ class ResponseSpec extends ObjectBehavior
         $this->getShopId()->shouldBe("SHOPID");
     }
 
-    function getKORawResponse()
+    private function getKORawResponse()
     {
         $response = new \stdClass();
 
@@ -57,7 +57,7 @@ class ResponseSpec extends ObjectBehavior
         return $response;
     }
 
-    function getOKRawResponse()
+    private function getOKRawResponse()
     {
         $response = new \stdClass();
 

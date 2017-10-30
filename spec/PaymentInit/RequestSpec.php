@@ -9,12 +9,12 @@ use Webgriffe\LibUnicreditImprese\SignatureCalculatorInterface;
 
 class RequestSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Request');
     }
 
-    function it_can_generate_signature_data()
+    public function it_can_generate_signature_data()
     {
         $this->setTid(1);
         $this->setShopId(2);
@@ -35,7 +35,7 @@ class RequestSpec extends ObjectBehavior
         $this->getSignatureData()->shouldBeEqualTo("1234567008910111213141516");
     }
 
-    function it_can_to_array()
+    public function it_can_to_array()
     {
         $this->setSignature("signature");
         $this->setTid("tid");
@@ -80,7 +80,7 @@ class RequestSpec extends ObjectBehavior
         $this->toArray()->shouldHaveKeyWithValue('FreeText', 'freetext');
     }
 
-    function it_throws_exception_on_amount_with_more_than_2_decimal_places()
+    public function it_throws_exception_on_amount_with_more_than_2_decimal_places()
     {
         $this->setAmount(2.99);
         $this->shouldThrow('RuntimeException')->duringSetAmount(2.991);
