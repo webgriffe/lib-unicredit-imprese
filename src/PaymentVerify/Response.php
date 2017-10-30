@@ -6,23 +6,18 @@ use Webgriffe\LibUnicreditImprese\PaymentResponse;
 
 class Response extends PaymentResponse
 {
+    protected $tid;
     protected $rc;
     protected $error;
     protected $errorDesc;
+    protected $signature;
+    protected $shopId;
+    protected $paymentId;
     protected $tranId;
     protected $authCode;
     protected $enrStatus;
     protected $authStatus;
     protected $brand;
-    protected $signature;
-    protected $maskedPan;
-    protected $payInstrToken;
-    protected $expireMonth;
-    protected $expireYear;
-    protected $status;
-    protected $payInstr;
-    protected $shopId;
-    protected $paymentId;
 
     /**
      * @return mixed
@@ -38,22 +33,6 @@ class Response extends PaymentResponse
     public function setSignature($signature)
     {
         $this->signature = $signature;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getPayInstr()
-    {
-        return $this->payInstr;
-    }
-
-    /**
-     * @param mixed $payInstr
-     */
-    public function setPayInstr($payInstr)
-    {
-        $this->payInstr = $payInstr;
     }
 
     /**
@@ -86,86 +65,6 @@ class Response extends PaymentResponse
     public function setPaymentId($paymentId)
     {
         $this->paymentId = $paymentId;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMaskedPan()
-    {
-        return $this->maskedPan;
-    }
-
-    /**
-     * @param mixed $maskedPan
-     */
-    public function setMaskedPan($maskedPan)
-    {
-        $this->maskedPan = $maskedPan;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPayInstrToken()
-    {
-        return $this->payInstrToken;
-    }
-
-    /**
-     * @param mixed $payInstrToken
-     */
-    public function setPayInstrToken($payInstrToken)
-    {
-        $this->payInstrToken = $payInstrToken;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getExpireMonth()
-    {
-        return $this->expireMonth;
-    }
-
-    /**
-     * @param mixed $expireMonth
-     */
-    public function setExpireMonth($expireMonth)
-    {
-        $this->expireMonth = $expireMonth;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getExpireYear()
-    {
-        return $this->expireYear;
-    }
-
-    /**
-     * @param mixed $expireYear
-     */
-    public function setExpireYear($expireYear)
-    {
-        $this->expireYear = $expireYear;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param mixed $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
     }
 
     /**
@@ -311,17 +210,11 @@ class Response extends PaymentResponse
         $this->shopId = $data->shopID;
         $this->paymentId = $data->paymentID;
         if (!$this->error) {
-            $this->payInstr = $data->payInstr;
             $this->tranId = $data->tranID;
             $this->authCode = $data->authCode;
             $this->enrStatus = $data->enrStatus;
             $this->authStatus = $data->authStatus;
             $this->brand = $data->brand;
-            $this->maskedPan = $data->maskedPan;
-            $this->payInstrToken = $data->payInstrToken;
-            $this->expireMonth = $data->expireMonth;
-            $this->expireYear = $data->expireYear;
-            $this->status = $data->status;
         }
     }
 }
