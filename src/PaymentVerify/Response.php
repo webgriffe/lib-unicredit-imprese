@@ -212,8 +212,8 @@ class Response extends PaymentResponse
         if (!$this->error) {
             $this->tranId = $data->tranID;
             $this->authCode = $data->authCode;
-            $this->enrStatus = $data->enrStatus;
-            $this->authStatus = $data->authStatus;
+            $this->enrStatus = isset($data->enrStatus) ? $data->enrStatus : 'N';
+            $this->authStatus = isset($data->authStatus) ? $data->authStatus : 'N';
             $this->brand = $data->brand;
         }
     }

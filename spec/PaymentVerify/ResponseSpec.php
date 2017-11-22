@@ -8,6 +8,24 @@ use Webgriffe\LibUnicreditImprese\PaymentVerify\Response;
 
 class ResponseSpec extends ObjectBehavior
 {
+    public function it_should_initialize_from_successful_raw_response_even_without_enr_status()
+    {
+        $this->beConstructedWith($this->getSuccessfulSoapRawResponseWithout3dSecureInfo());
+
+        $this->shouldHaveType(Response::class);
+        $this->getRc()->shouldBe('RC');
+        $this->getError()->shouldBe(false);
+        $this->getErrorDesc()->shouldBe('');
+        $this->getSignature()->shouldBe('signature');
+        $this->getShopId()->shouldBe('shopid');
+        $this->getPaymentId()->shouldBe('paymentid');
+        $this->getTranId()->shouldBe('tranid');
+        $this->getAuthCode()->shouldBe('authcode');
+        $this->getEnrStatus()->shouldBe('N');
+        $this->getAuthStatus()->shouldBe('N');
+        $this->getBrand()->shouldBe('brand');
+    }
+
     public function it_should_initialize_from_successful_raw_response()
     {
         $this->beConstructedWith($this->getSuccessfulSoapRawResponse());
@@ -58,6 +76,24 @@ class ResponseSpec extends ObjectBehavior
         $response->authCode = 'authcode';
         $response->enrStatus = 'enrstatus';
         $response->authStatus = 'authstatus';
+        $response->brand = 'brand';
+        $soapResponse = new \stdClass();
+        $soapResponse->response = $response;
+        return $soapResponse;
+    }
+
+    private function getSuccessfulSoapRawResponseWithout3dSecureInfo()
+    {
+        $response = new \stdClass();
+        $response->tid = 123456;
+        $response->rc = 'RC';
+        $response->error = false;
+        $response->errorDesc = '';
+        $response->signature = 'signature';
+        $response->shopID = 'shopid';
+        $response->paymentID = 'paymentid';
+        $response->tranID = 'tranid';
+        $response->authCode = 'authcode';
         $response->brand = 'brand';
         $soapResponse = new \stdClass();
         $soapResponse->response = $response;
