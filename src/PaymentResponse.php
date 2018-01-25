@@ -21,7 +21,7 @@ abstract class PaymentResponse
     {
         if (isset($data->response->error) && !empty($data->response->error)) {
             if ($logger) {
-                $logger->debug('Webservice error, description:' . print_r($data, true));
+                $logger->critical('Webservice error, description:' . print_r($data, true));
             }
         }
         $this->initFromRawSoapResponse($data);

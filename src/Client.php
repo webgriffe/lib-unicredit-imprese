@@ -94,13 +94,15 @@ class Client
         if (!extension_loaded('soap')) {
             if ($this->logger) {
                 $this->logger->critical(
-                    "Non è stato possibile creare il client per il webserver." .
-                    "\nL\'estensione PHP_SOAP è necessaria per il funzionamento del modulo"
+                    'Unable to create the webserver client.'.PHP_EOL.
+                    'The PHP_SOAP extension is required to use this library.'
                 );
             }
             throw new \RuntimeException('PHP SOAP extension is required.');
         }
+
         if ($isTestMode) {
+            //Allow self-signed certificates in test mode
             $contextOptions = array(
                 'ssl' => array(
                     'allow_self_signed' => true,
@@ -226,6 +228,7 @@ class Client
      * @param $shopId
      * @param $paymentId
      * @return VerifyResponse
+     * @throws \Exception
      */
     public function paymentVerify($shopId, $paymentId)
     {
