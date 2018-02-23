@@ -8,7 +8,6 @@
 
 namespace Webgriffe\LibUnicreditImprese\SoapClient;
 
-
 interface WrapperInterface
 {
     /**
