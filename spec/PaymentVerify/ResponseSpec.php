@@ -4,13 +4,14 @@ namespace spec\Webgriffe\LibUnicreditImprese\PaymentVerify;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 use Webgriffe\LibUnicreditImprese\PaymentVerify\Response;
 
 class ResponseSpec extends ObjectBehavior
 {
-    public function it_should_initialize_from_successful_raw_response_even_without_enr_status()
+    public function it_should_initialize_from_successful_raw_response_even_without_enr_status(LoggerInterface $logger)
     {
-        $this->beConstructedWith($this->getSuccessfulSoapRawResponseWithout3dSecureInfo());
+        $this->beConstructedWith($this->getSuccessfulSoapRawResponseWithout3dSecureInfo(), $logger);
 
         $this->shouldHaveType(Response::class);
         $this->getRc()->shouldBe('RC');
@@ -26,9 +27,9 @@ class ResponseSpec extends ObjectBehavior
         $this->getBrand()->shouldBe('brand');
     }
 
-    public function it_should_initialize_from_successful_raw_response()
+    public function it_should_initialize_from_successful_raw_response(LoggerInterface $logger)
     {
-        $this->beConstructedWith($this->getSuccessfulSoapRawResponse());
+        $this->beConstructedWith($this->getSuccessfulSoapRawResponse(), $logger);
 
         $this->shouldHaveType(Response::class);
         $this->getRc()->shouldBe('RC');
@@ -44,9 +45,9 @@ class ResponseSpec extends ObjectBehavior
         $this->getBrand()->shouldBe('brand');
     }
 
-    public function it_should_initialize_from_error_raw_response()
+    public function it_should_initialize_from_error_raw_response(LoggerInterface $logger)
     {
-        $this->beConstructedWith($this->getErrorSoapRawResponse());
+        $this->beConstructedWith($this->getErrorSoapRawResponse(), $logger);
 
         $this->shouldHaveType(Response::class);
         $this->getRc()->shouldBe('RC');

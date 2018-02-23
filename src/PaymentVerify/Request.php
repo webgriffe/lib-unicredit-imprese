@@ -2,12 +2,10 @@
 
 namespace Webgriffe\LibUnicreditImprese\PaymentVerify;
 
-use Webgriffe\LibUnicreditImprese\PaymentRequest;
 use Webgriffe\LibUnicreditImprese\SignableInterface;
 
 class Request implements SignableInterface
 {
-
     /**
      * @var string
      */

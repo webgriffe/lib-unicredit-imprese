@@ -5,8 +5,10 @@ namespace spec\Webgriffe\LibUnicreditImprese;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
-use Webgriffe\LibUnicreditImprese\PaymentInit\Request;
 use spec\Webgriffe\LibUnicreditImprese;
+use Webgriffe\LibUnicreditImprese\PaymentInit\Response as PaymentInitResponse;
+use Webgriffe\LibUnicreditImprese\SoapClient\WrapperInterface;
+use Webgriffe\LibUnicreditImprese\PaymentVerify\Response as PaymentVerifyResponse;
 
 class ClientSpec extends ObjectBehavior
 {
@@ -16,51 +18,191 @@ class ClientSpec extends ObjectBehavior
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\Client');
     }
 
-    public function should_throw_exceptions_if_tid_missing(LoggerInterface $logger)
+    public function it_should_throw_exceptions_if_key_missing(LoggerInterface $logger)
     {
         $this->beConstructedWith($logger);
-        $this->paymentInit(new Request());
-        $this->shouldThrow(new \Exception(""))->duringInit();
+        $this->shouldThrow(new \Exception("Missing signature key"))->duringInit(true, '', '', '');
     }
 
-    public function payment_init_should_return_payment_init_response()
+    public function it_should_throw_exceptions_if_tid_missing(LoggerInterface $logger)
     {
-        $soapClient = null;
-        $soapClient->beADoubleOf('\SoapClient');
-        $soapClient->paymentInit()->willReturn($this->getSoapInitResponse());
-        $this->paymentInit()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
+        $this->beConstructedWith($logger);
+        $this->shouldThrow(new \Exception("Missing terminal id"))->duringInit(true, 'key', '', '');
     }
 
-    public function payment_verify_should_return_payment_verify_response()
+    public function it_should_throw_exceptions_if_wsdl_missing(LoggerInterface $logger)
     {
-        $soapClient = null;
-        $soapClient->beADoubleOf('\SoapClient');
-        $soapClient->paymentInit()->willReturn($this->getSoapVerifyResponse());
-        $this->paymentVerify()->shouldReturnAnInstanceOf('Webgriffe\LibUnicreditImprese\PaymentVerify\Response');
+        $this->beConstructedWith($logger);
+        $this->shouldThrow(new \Exception("Missing WSDL URL"))->duringInit(true, 'key', 'tid', '');
+    }
+
+    public function it_should_throw_error_if_not_initialized_before_payment_init(LoggerInterface $logger)
+    {
+        $this->beConstructedWith($logger);
+
+        $this->shouldThrow(new \LogicException('Please initialize the client before trying to perform paymentInit operations'))
+            ->duringPaymentInit(
+                'PURCHASE',
+                10.0,
+                'IT',
+                'http://notify.com',
+                'http://error.com'
+            );
+    }
+
+    public function it_should_throw_error_if_not_initialized_before_payment_verify(LoggerInterface $logger)
+    {
+        $this->beConstructedWith($logger);
+
+        $this->shouldThrow(new \LogicException('Please initialize the client before trying to perform verify operations'))
+            ->duringPaymentVerify('shopid', 'paymentid');
+    }
+
+    public function it_should_report_error_on_missing_mandatory_argument_during_payment_init(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->shouldThrow(new \InvalidArgumentException('Cannot invoke webservice, some mandatory field is missing'))
+            ->duringPaymentInit('', '', '', '', '');
+    }
+
+    public function it_should_report_error_on_null_mandatory_argument_during_payment_init(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->shouldThrow(new \InvalidArgumentException('Cannot invoke webservice, some mandatory field is missing'))
+            ->duringPaymentInit(null, null, null, null, null);
+    }
+
+    public function it_should_report_error_unsupported_currency_during_payment_init(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->shouldThrow(new \InvalidArgumentException('Unsupported currency specified ZWL.'))
+            ->duringPaymentInit(
+                'PURCHASE',
+                10.0,
+                'IT',
+                'http://notify.com',
+                'http://error.com',
+                'ZWL'
+            );
+    }
+
+    public function it_should_return_payment_init_response_on_payment_init(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+        $soapClientWrapper->init(Argument::any())->willReturn($this->getSoapInitResponse());
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->paymentInit(
+            'PURCHASE',
+            10.0,
+            'IT',
+            'http://notify.com',
+            'http://error.com'
+        )->shouldReturnAnInstanceOf(PaymentInitResponse::class);
+    }
+
+    public function it_should_throw_exception_on_missing_arguments_during_payment_verify(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->shouldThrow(new \InvalidArgumentException('Cannot invoke webservice, some mandatory field is missing'))
+            ->duringPaymentVerify('', '');
+    }
+
+    public function it_should_return_payment_verify_response_on_payment_verify(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+        $soapClientWrapper->verify(Argument::any())->willReturn($this->getSoapVerifyResponse());
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->paymentVerify('shopid', 'paymentid')->shouldReturnAnInstanceOf(PaymentVerifyResponse::class);
     }
     
     private function getSoapInitResponse()
     {
-        $data = array();
-        $data["Error"] = false;
-        $data["Rc"] = "tutto bene";
-        $data["ErrorDesc"] = "error desc";
-        $data["PaymentID"] = "9854";
-        $data["RedirectURL"] = "http://www.banca.com/paga/";
-        return $data;
+        $response = new \stdClass();
+        $response->error = false;
+        $response->rc = "tutto bene";
+        $response->errorDesc = "error desc";
+        $response->paymentID = "9854";
+        $response->redirectURL = "http://www.sito.com/paga/";
+        $response->signature = 'signature';
+        $response->shopID = 'shopid';
+
+        $result = new \stdClass();
+        $result->response = $response;
+        return $result;
     }
 
     private function getSoapVerifyResponse()
     {
-        $data = array();
-        $data["Error"] = "";
-        $data["Rc"] = "";
-        $data["ErrorDesc"] = "";
-        $data["TranId"] = "";
-        $data["AuthCode"] = "";
-        $data["EnrStatus"] = "";
-        $data["AuthStatus"] = "";
-        $data["Brand"] = "";
-        return $data;
+        $response = new \stdClass();
+
+        $response->tid = "";
+        $response->rc = "";
+        $response->error = "";
+        $response->errorDesc = "";
+        $response->signature = "";
+        $response->shopID = "";
+        $response->paymentID = "";
+
+        $response->tranID = "";
+        $response->authCode = "";
+        $response->enrStatus = "";
+        $response->authStatus = "";
+        $response->brand = "";
+
+        $result = new \stdClass();
+        $result->response = $response;
+        return $result;
     }
 }

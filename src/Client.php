@@ -9,6 +9,7 @@ use Webgriffe\LibUnicreditImprese\PaymentInit\Response as InitResponse;
 
 use Webgriffe\LibUnicreditImprese\PaymentVerify\Request as VerifyRequest;
 use Webgriffe\LibUnicreditImprese\PaymentVerify\Response as VerifyResponse;
+use Webgriffe\LibUnicreditImprese\SoapClient\WrapperInterface;
 
 /**
  * Class Client
@@ -18,24 +19,23 @@ class Client
 {
     const TRANSACTION_TYPE_AUTH = 'AUTH';
     const TRANSACTION_TYPE_PURCHASE = 'PURCHASE';
+
     const CURRENCY_CODE_EUR = 'EUR';
     const CURRENCY_CODE_USD = 'USD';
-    const TRANSACTION_IN_PROGRESS_RETURN_CODE = 'IGFS_814';
     const LANGUAGE_ITA = 'IT';
     const LANGUAGE_ENG = 'EN';
-    
+
+    const TRANSACTION_IN_PROGRESS_RETURN_CODE = 'IGFS_814';
+
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
-    protected $kSig;
 
     /**
      * @var string
      */
-    protected $tid;
-
-    /**
-     * @var null|\SoapClient
-     */
-    protected $soapClient = null;
+    protected $kSig;
 
     /**
      * @var string
@@ -43,12 +43,26 @@ class Client
     protected $tId;
 
     /**
+     * @var WrapperInterface
+     */
+    protected $soapClientWrapper;
+
+    /**
      * Client constructor.
      * @param LoggerInterface $logger
      */
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
+        $this->soapClientWrapper = new SoapClient\Wrapper();
+    }
+
+    /**
+     * @param WrapperInterface $wrapper
+     */
+    public function setSoapClientWrapper(WrapperInterface $wrapper)
+    {
+        $this->soapClientWrapper = $wrapper;
     }
 
     /**
@@ -72,21 +86,39 @@ class Client
      */
     public function getTid()
     {
-        return $this->tid;
+        return $this->tId;
     }
     
     /**
-     * @param mixed $tid
+     * @param mixed $tId
      */
-    public function setTid($tid)
+    public function setTid($tId)
     {
-        $this->tId = $tid;
+        $this->tId = $tId;
     }
 
+    /**
+     * @param $isTestMode boolean
+     * @param $kSig string Secret signature key
+     * @param $tid string Terminal ID
+     * @param $wsdl string WSDL URL
+     */
     public function init($isTestMode, $kSig, $tid, $wsdl)
     {
+        if (!$kSig) {
+            throw new \InvalidArgumentException('Missing signature key');
+        }
+
+        if (!$tid) {
+            throw new \InvalidArgumentException('Missing terminal id');
+        }
+
+        if (!$wsdl) {
+            throw new \InvalidArgumentException('Missing WSDL URL');
+        }
+
         $this->kSig = $kSig;
-        $this->tid = $tid;
+        $this->tId = $tid;
         $soapOptions = array(
             'compression' => SOAP_COMPRESSION_ACCEPT,
             'soap_version' => SOAP_1_1,
@@ -111,40 +143,34 @@ class Client
             $sslContext = stream_context_create($contextOptions);
             $soapOptions['stream_context'] = $sslContext;
         }
-        $this->soapClient = $this->getClient($wsdl, $soapOptions);
+
+        $this->soapClientWrapper->initialize($wsdl, $soapOptions);
     }
 
     /**
-     * @param string $wsdl
-     * @param array $soapOptions
-     * @return \SoapClient
-     */
-    protected function getClient($wsdl, array $soapOptions)
-    {
-        return new \SoapClient($wsdl, $soapOptions);
-    }
-
-    /**
-     * https://pagamenti.unicredit.it/UNI_CG_SERVICES/services/PaymentInitGatewayPort?xsd=dto/init/PaymentInit.xsd
+     * @see https://pagamenti.unicredit.it/UNI_CG_SERVICES/services/PaymentInitGatewayPort?xsd=dto/init/PaymentInit.xsd
      *
-     * @param $shopId
-     * @param $shopUserRef
-     * @param $shopUserName
-     * @param $shopUserAccount
-     * @param $trType
-     * @param $floatAmount
-     * @param $currencyCode
+     * @param $trType string One of AUTH, PURCHASE, VERIFY, TOKENIZE, DELETE or MODIFY
+     * @param $floatAmount float Payment amount. Must be a value with no more than 2 decimal places
      * @param $langId
      * @param $notifyUrl
      * @param $errorUrl
+     * @param $currencyCode string Only EUR and USD are allowed
+     * @param $shopId
+     * @param $shopUserRef
+     * @param $shopUserName
+     * @param $description
+     * @param $shopUserAccount
      * @param $addInfo1
      * @param $addInfo2
      * @param $addInfo3
      * @param $addInfo4
      * @param $addInfo5
-     * @param $description
      * @param $recurrent
      * @param $freeText
+     * @param $paymentReason
+     * @param $validityExpire
+     *
      * @return InitResponse
      * @throws \Exception
      */
@@ -166,9 +192,14 @@ class Client
         $addInfo4 = null,
         $addInfo5 = null,
         $recurrent = 0,
-        $freeText = null
+        $freeText = null,
+        $paymentReason = null,
+        $validityExpire = null
     ) {
-        //@todo validation
+        if (!$this->isInitialized()) {
+            throw new \LogicException('Please initialize the client before trying to perform paymentInit operations');
+        }
+
         if (empty($trType) || empty($floatAmount) || empty($langId) || empty($notifyUrl) || empty($errorUrl)) {
             throw new \InvalidArgumentException("Cannot invoke webservice, some mandatory field is missing");
         }
@@ -177,6 +208,8 @@ class Client
         if ($currencyCode != self::CURRENCY_CODE_EUR && $currencyCode != self::CURRENCY_CODE_USD) {
             throw new \InvalidArgumentException(sprintf('Unsupported currency specified %s.', $currencyCode));
         }
+
+        //@todo more validation
 
         try {
             $request = new InitRequest();
@@ -198,8 +231,10 @@ class Client
             $request->setAddInfo5($addInfo5);
             $request->setDescription($description);
             $request->setRecurrent($recurrent);
+            $request->setPaymentReason($paymentReason);
             $request->setFreeText($freeText);
-            $request->setTid($this->tid);
+            $request->setValidityExpire($validityExpire);
+            $request->setTid($this->tId);
         } catch (\Exception $ex) {
             $this->logger->critical($ex->getMessage());
             throw $ex;
@@ -209,7 +244,7 @@ class Client
         $signatureCalculator->sign($request, $this->kSig);
 
         return new InitResponse(
-            $this->soapClient->init(
+            $this->soapClientWrapper->init(
                 array('request' => ($request->toArray()))
             ),
             $this->logger
@@ -217,32 +252,52 @@ class Client
     }
 
     /**
-     * @return bool
-     */
-    protected function canExecute()
-    {
-        return isset($this->tid) && isset($this->kSig);
-    }
-
-    /**
      * @param $shopId
      * @param $paymentId
+     *
      * @return VerifyResponse
      * @throws \Exception
      */
     public function paymentVerify($shopId, $paymentId)
     {
+        if (!$this->isInitialized()) {
+            throw new \LogicException('Please initialize the client before trying to perform verify operations');
+        }
+
+        if (empty($shopId) || empty($paymentId)) {
+            throw new \InvalidArgumentException("Cannot invoke webservice, some mandatory field is missing");
+        }
+
         $request = new VerifyRequest();
-        $request->setTid($this->tid);
+        $request->setTid($this->tId);
         $request->setShopId($shopId);
         $request->setPaymentId($paymentId);
         $signatureCalculator = new SignatureCalculator();
         $signatureCalculator->sign($request, $this->kSig);
-        $request = array('request'=>($request->toArray()));
+        $request = array('request' => ($request->toArray()));
         $this->logger->debug(print_r($request, true));
+
         return new VerifyResponse(
-            $this->soapClient->verify($request),
+            $this->soapClientWrapper->verify($request),
             $this->logger
         );
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isInitialized()
+    {
+        return isset($this->tId) && isset($this->kSig) && $this->soapClientWrapper->isInitialized();
+    }
+
+    /**
+     * @deprecated Use isInitialized instead
+     *
+     * @return bool
+     */
+    protected function canExecute()
+    {
+        return $this->isInitialized();
     }
 }

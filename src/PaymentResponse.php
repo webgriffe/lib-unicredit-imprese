@@ -17,13 +17,14 @@ abstract class PaymentResponse
      * @param \stdClass $data
      * @param LoggerInterface|null $logger
      */
-    public function __construct(\stdClass $data, LoggerInterface $logger = null)
+    public function __construct(\stdClass $data, LoggerInterface $logger)
     {
         if (isset($data->response->error) && !empty($data->response->error)) {
             if ($logger) {
                 $logger->critical('Webservice error, description:' . print_r($data, true));
             }
         }
+
         $this->initFromRawSoapResponse($data);
     }
 

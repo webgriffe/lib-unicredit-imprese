@@ -4,23 +4,24 @@ namespace spec\Webgriffe\LibUnicreditImprese\PaymentInit;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 
 class ResponseSpec extends ObjectBehavior
 {
-    public function it_is_initializable()
+    public function it_is_initializable(LoggerInterface $logger)
     {
         $soapResponse = new \stdClass();
         $soapResponse->response = $this->getOkRawResponse();
 
-        $this->beConstructedWith($soapResponse);
+        $this->beConstructedWith($soapResponse, $logger);
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
     }
 
-    public function it_should_initialize_from_raw_response()
+    public function it_should_initialize_from_raw_response(LoggerInterface $logger)
     {
         $soapResponse = new \stdClass();
         $soapResponse->response = $this->getOkRawResponse();
-        $this->beConstructedWith($soapResponse);
+        $this->beConstructedWith($soapResponse, $logger);
 
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
         $this->getRc()->shouldBe("RC");
@@ -31,11 +32,11 @@ class ResponseSpec extends ObjectBehavior
         $this->getShopId()->shouldBe("SHOPID");
     }
 
-    public function it_should_initialize_from_raw_error_response()
+    public function it_should_initialize_from_raw_error_response(LoggerInterface $logger)
     {
         $soapResponse = new \stdClass();
         $soapResponse->response = $this->getKORawResponse();
-        $this->beConstructedWith($soapResponse);
+        $this->beConstructedWith($soapResponse, $logger);
 
         $this->shouldHaveType('Webgriffe\LibUnicreditImprese\PaymentInit\Response');
         $this->getRc()->shouldBe("RC");

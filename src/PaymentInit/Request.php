@@ -2,7 +2,6 @@
 
 namespace Webgriffe\LibUnicreditImprese\PaymentInit;
 
-use Webgriffe\LibUnicreditImprese\PaymentRequest;
 use Webgriffe\LibUnicreditImprese\SignableInterface;
 
 class Request implements SignableInterface
@@ -107,7 +106,17 @@ class Request implements SignableInterface
     /**
      * @var string
      */
+    protected $paymentReason;
+
+    /**
+     * @var string
+     */
     protected $freeText;
+
+    /**
+     * @var string
+     */
+    protected $validityExpire;
 
     /**
      * @return string
@@ -397,6 +406,22 @@ class Request implements SignableInterface
     /**
      * @return string
      */
+    public function getPaymentReason()
+    {
+        return $this->paymentReason;
+    }
+
+    /**
+     * @param string $paymentReason
+     */
+    public function setPaymentReason($paymentReason)
+    {
+        $this->paymentReason = $paymentReason;
+    }
+
+    /**
+     * @return string
+     */
     public function getFreeText()
     {
         return $this->freeText;
@@ -408,6 +433,22 @@ class Request implements SignableInterface
     public function setFreeText($freeText)
     {
         $this->freeText = $freeText;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValidityExpire()
+    {
+        return $this->validityExpire;
+    }
+
+    /**
+     * @param string $validityExpire
+     */
+    public function setValidityExpire($validityExpire)
+    {
+        $this->validityExpire = $validityExpire;
     }
 
     /**
@@ -434,6 +475,7 @@ class Request implements SignableInterface
     {
         $this->signature = $signature;
     }
+
     /**
      * @return string
      */
@@ -455,12 +497,18 @@ class Request implements SignableInterface
         $data .= $this->addInfo3;
         $data .= $this->addInfo4;
         $data .= $this->addInfo5;
+        $data .= $this->description;
+        $data .= $this->recurrent;
+        $data .= $this->paymentReason;
+        $data .= $this->freeText;
+        $data .= $this->validityExpire;
+
         return $data;
     }
 
     public function toArray()
     {
-        $data = array(
+        return array(
             'signature'       => $this->signature,
             'tid'             => $this->tid,
             'shopID'          => $this->shopId,
@@ -480,8 +528,9 @@ class Request implements SignableInterface
             'addInfo5'        => $this->addInfo5,
             'Description'     => $this->description,
             'Recurrent'       => $this->recurrent,
+            'PaymentReason'   => $this->paymentReason,
             'FreeText'        => $this->freeText,
+            'ValidityExpire'  => $this->validityExpire,
         );
-        return $data;
     }
 }
