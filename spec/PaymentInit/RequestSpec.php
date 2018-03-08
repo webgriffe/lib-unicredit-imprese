@@ -55,7 +55,6 @@ class RequestSpec extends ObjectBehavior
         $this->setAddInfo4("addrinfo4");
         $this->setAddInfo5("addrinfo5");
         $this->setDescription("description");
-        $this->setRecurrent("recurrent");
         $this->setFreeText("freetext");
 
         $this->toArray()->shouldHaveKeyWithValue('signature', 'signature');
@@ -75,9 +74,8 @@ class RequestSpec extends ObjectBehavior
         $this->toArray()->shouldHaveKeyWithValue('addInfo3', 'addrinfo3');
         $this->toArray()->shouldHaveKeyWithValue('addInfo4', 'addrinfo4');
         $this->toArray()->shouldHaveKeyWithValue('addInfo5', 'addrinfo5');
-        $this->toArray()->shouldHaveKeyWithValue('Description', 'description');
-        $this->toArray()->shouldHaveKeyWithValue('Recurrent', 'recurrent');
-        $this->toArray()->shouldHaveKeyWithValue('FreeText', 'freetext');
+        $this->toArray()->shouldHaveKeyWithValue('description', 'description');
+        $this->toArray()->shouldHaveKeyWithValue('freeText', 'freetext');
     }
 
     public function it_throws_exception_on_amount_with_more_than_2_decimal_places()

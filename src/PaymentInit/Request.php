@@ -99,11 +99,6 @@ class Request implements SignableInterface
     protected $description;
 
     /**
-     * @var boolean
-     */
-    protected $recurrent;
-
-    /**
      * @var string
      */
     protected $paymentReason;
@@ -389,22 +384,6 @@ class Request implements SignableInterface
     }
 
     /**
-     * @return boolean
-     */
-    public function isRecurrent()
-    {
-        return $this->recurrent;
-    }
-
-    /**
-     * @param boolean $recurrent
-     */
-    public function setRecurrent($recurrent)
-    {
-        $this->recurrent = $recurrent;
-    }
-
-    /**
      * @return string
      */
     public function getPaymentReason()
@@ -499,7 +478,6 @@ class Request implements SignableInterface
         $data .= $this->addInfo4;
         $data .= $this->addInfo5;
         $data .= $this->description;
-        $data .= $this->recurrent;
         $data .= $this->paymentReason;
         $data .= $this->freeText;
         $data .= $this->validityExpire;
@@ -528,7 +506,6 @@ class Request implements SignableInterface
             'addInfo4'        => $this->addInfo4,
             'addInfo5'        => $this->addInfo5,
             'description'     => $this->description,
-            'recurrent'       => $this->recurrent,
             'paymentReason'   => $this->paymentReason,
             'freeText'        => $this->freeText,
             'validityExpire'  => $this->validityExpire,

@@ -192,7 +192,6 @@ class Client
      * @param $addInfo3
      * @param $addInfo4
      * @param $addInfo5
-     * @param $recurrent
      * @param $freeText
      * @param $paymentReason
      * @param $validityExpire
@@ -217,7 +216,6 @@ class Client
         $addInfo3 = null,
         $addInfo4 = null,
         $addInfo5 = null,
-        $recurrent = 0,
         $freeText = null,
         $paymentReason = null,
         $validityExpire = null
@@ -270,7 +268,6 @@ class Client
             $request->setAddInfo4($addInfo4);
             $request->setAddInfo5($addInfo5);
             $request->setDescription($description);
-            $request->setRecurrent($recurrent);
             $request->setPaymentReason($paymentReason);
             $request->setFreeText($freeText);
             $request->setValidityExpire($validityExpire);
