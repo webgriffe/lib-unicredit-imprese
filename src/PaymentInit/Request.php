@@ -477,10 +477,7 @@ class Request implements SignableInterface
         $data .= $this->addInfo3;
         $data .= $this->addInfo4;
         $data .= $this->addInfo5;
-//        $data .= $this->description;
-//        $data .= $this->paymentReason;
-//        $data .= $this->freeText;
-//        $data .= $this->validityExpire;
+        //It looks like the additional fields are not used by the signature, despite what the documentation says
 
         return $data;
     }
@@ -508,7 +505,7 @@ class Request implements SignableInterface
             'addInfo4'        => $this->addInfo4,
             'addInfo5'        => $this->addInfo5,
             'description'     => $this->description,
-            'paymentReason'   => $this->paymentReason,
+            'paymentReason'   => is_null($this->paymentReason) ? '' : $this->paymentReason,
             'freeText'        => $this->freeText,
             'validityExpire'  => $this->validityExpire,
         );
