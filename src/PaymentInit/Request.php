@@ -477,10 +477,10 @@ class Request implements SignableInterface
         $data .= $this->addInfo3;
         $data .= $this->addInfo4;
         $data .= $this->addInfo5;
-        $data .= $this->description;
-        $data .= $this->paymentReason;
-        $data .= $this->freeText;
-        $data .= $this->validityExpire;
+//        $data .= $this->description;
+//        $data .= $this->paymentReason;
+//        $data .= $this->freeText;
+//        $data .= $this->validityExpire;
 
         return $data;
     }
