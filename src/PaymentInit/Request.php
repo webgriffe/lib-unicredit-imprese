@@ -527,11 +527,11 @@ class Request implements SignableInterface
             'addInfo3'        => $this->addInfo3,
             'addInfo4'        => $this->addInfo4,
             'addInfo5'        => $this->addInfo5,
-            'Description'     => $this->description,
-            'Recurrent'       => $this->recurrent,
-            'PaymentReason'   => $this->paymentReason,
-            'FreeText'        => $this->freeText,
-            'ValidityExpire'  => $this->validityExpire,
+            'description'     => $this->description,
+            'recurrent'       => $this->recurrent,
+            'paymentReason'   => $this->paymentReason,
+            'freeText'        => $this->freeText,
+            'validityExpire'  => $this->validityExpire,
         );
     }
 }
