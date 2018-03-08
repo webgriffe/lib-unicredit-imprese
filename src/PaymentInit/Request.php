@@ -213,6 +213,7 @@ class Request implements SignableInterface
      */
     public function setAmount($amount)
     {
+        //@todo: Maybe thos should become a "dumb" setter and this code should be in the client?
         $centsAmount = $amount * 100;
         $newAmount = round($centsAmount);
         //Make sure that the supplied amount contains no more than 2 decimal places

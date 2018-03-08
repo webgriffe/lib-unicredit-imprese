@@ -90,6 +90,29 @@ class ClientSpec extends ObjectBehavior
             ->duringPaymentInit(null, null, null, null, null);
     }
 
+    public function it_should_report_error_unsupported_operation_during_payment_init(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->shouldThrow(new \InvalidArgumentException('Unsupported operation specified OTHER.'))
+            ->duringPaymentInit(
+                'OTHER',
+                10.0,
+                'IT',
+                'http://notify.com',
+                'http://error.com',
+                'EUR'
+            );
+    }
+
     public function it_should_report_error_unsupported_currency_during_payment_init(LoggerInterface $logger, $soapClientWrapper)
     {
         $this->beConstructedWith($logger);
@@ -110,6 +133,29 @@ class ClientSpec extends ObjectBehavior
                 'http://notify.com',
                 'http://error.com',
                 'ZWL'
+            );
+    }
+
+    public function it_should_report_error_unsupported_language_during_payment_init(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->shouldThrow(new \InvalidArgumentException('Unsupported language specified MY.'))
+            ->duringPaymentInit(
+                'PURCHASE',
+                10.0,
+                'MY',
+                'http://notify.com',
+                'http://error.com',
+                'EUR'
             );
     }
 

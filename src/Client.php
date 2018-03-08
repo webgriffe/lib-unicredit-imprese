@@ -11,19 +11,45 @@ use Webgriffe\LibUnicreditImprese\PaymentVerify\Request as VerifyRequest;
 use Webgriffe\LibUnicreditImprese\PaymentVerify\Response as VerifyResponse;
 use Webgriffe\LibUnicreditImprese\SoapClient\WrapperInterface;
 
+use Webgriffe\LibUnicreditImprese\Lists\Currency;
+use Webgriffe\LibUnicreditImprese\Lists\Language;
+use Webgriffe\LibUnicreditImprese\Lists\Operation;
+
 /**
  * Class Client
  * @package Webgriffe\LibUnicreditImprese
  */
 class Client
 {
-    const TRANSACTION_TYPE_AUTH = 'AUTH';
-    const TRANSACTION_TYPE_PURCHASE = 'PURCHASE';
+    /**
+     * @deprecated Use the constants in the Webgriffe\LibUnicreditImprese\Lists\Operation class instead
+     */
+    const TRANSACTION_TYPE_AUTH = Operation::TRANSACTION_TYPE_AUTH;
 
-    const CURRENCY_CODE_EUR = 'EUR';
-    const CURRENCY_CODE_USD = 'USD';
-    const LANGUAGE_ITA = 'IT';
-    const LANGUAGE_ENG = 'EN';
+    /**
+     * @deprecated Use the constants in the Webgriffe\LibUnicreditImprese\Lists\Operation class instead
+     */
+    const TRANSACTION_TYPE_PURCHASE = Operation::TRANSACTION_TYPE_PURCHASE;
+
+    /**
+     * @deprecated Use the constants in the Webgriffe\LibUnicreditImprese\Lists\Currency class instead
+     */
+    const CURRENCY_CODE_EUR = Currency::CURRENCY_CODE_EUR;
+
+    /**
+     * @deprecated Use the constants in the Webgriffe\LibUnicreditImprese\Lists\Currency class instead
+     */
+    const CURRENCY_CODE_USD = Currency::CURRENCY_CODE_USD;
+
+    /**
+     * @deprecated Use the constants in the Webgriffe\LibUnicreditImprese\Lists\Language class instead
+     */
+    const LANGUAGE_ITA = Language::LANGUAGE_ITA;
+
+    /**
+     * @deprecated Use the constants in the Webgriffe\LibUnicreditImprese\Lists\Language class instead
+     */
+    const LANGUAGE_ENG = Language::LANGUAGE_ENG;
 
     const TRANSACTION_IN_PROGRESS_RETURN_CODE = 'IGFS_814';
 
@@ -150,12 +176,12 @@ class Client
     /**
      * @see https://pagamenti.unicredit.it/UNI_CG_SERVICES/services/PaymentInitGatewayPort?xsd=dto/init/PaymentInit.xsd
      *
-     * @param $trType string One of AUTH, PURCHASE, VERIFY, TOKENIZE, DELETE or MODIFY
+     * @param $trType string @see Webgriffe\LibUnicreditImprese\Lists\Operation for a list of allowed values
      * @param $floatAmount float Payment amount. Must be a value with no more than 2 decimal places
-     * @param $langId
+     * @param $languageCode string @see Webgriffe\LibUnicreditImprese\Lists\Language for a list of allowed values
      * @param $notifyUrl
      * @param $errorUrl
-     * @param $currencyCode string Only EUR and USD are allowed
+     * @param $currencyCode string @see Webgriffe\LibUnicreditImprese\Lists\Currency for a list of allowed values
      * @param $shopId
      * @param $shopUserRef
      * @param $shopUserName
@@ -177,10 +203,10 @@ class Client
     public function paymentInit(
         $trType,
         $floatAmount,
-        $langId,
+        $languageCode,
         $notifyUrl,
         $errorUrl,
-        $currencyCode = self::CURRENCY_CODE_EUR,
+        $currencyCode = Currency::CURRENCY_CODE_EUR,
         $shopId = null,
         $shopUserRef = null,
         $shopUserName = null,
@@ -200,12 +226,26 @@ class Client
             throw new \LogicException('Please initialize the client before trying to perform paymentInit operations');
         }
 
-        if (empty($trType) || empty($floatAmount) || empty($langId) || empty($notifyUrl) || empty($errorUrl)) {
+        if (empty($trType) || empty($floatAmount) || empty($languageCode) || empty($currencyCode) ||
+            empty($notifyUrl) || empty($errorUrl)) {
             throw new \InvalidArgumentException("Cannot invoke webservice, some mandatory field is missing");
+        }
+
+        $trType = strtoupper($trType);
+        $operations = new Operation();
+        if (!array_key_exists($trType, $operations->getList())) {
+            throw new \InvalidArgumentException(sprintf('Unsupported operation specified %s.', $trType));
+        }
+
+        $languageCode = strtoupper($languageCode);
+        $languagesList = new Language();
+        if (!array_key_exists($languageCode, $languagesList->getList())) {
+            throw new \InvalidArgumentException(sprintf('Unsupported language specified %s.', $languageCode));
         }
         
         $currencyCode = strtoupper($currencyCode);
-        if ($currencyCode != self::CURRENCY_CODE_EUR && $currencyCode != self::CURRENCY_CODE_USD) {
+        $currencyList = new Currency();
+        if (!array_key_exists($currencyCode, $currencyList->getList())) {
             throw new \InvalidArgumentException(sprintf('Unsupported currency specified %s.', $currencyCode));
         }
 
@@ -219,9 +259,9 @@ class Client
             $request->setShopUserName($shopUserName);
             $request->setShopUserAccount($shopUserAccount);
             $request->setTrType($trType);
-            $request->setAmount($floatAmount);
+            $request->setAmount($floatAmount);  //<-- The setter performs the validation and the conversion
             $request->setCurrencyCode($currencyCode);
-            $request->setLangId($langId);
+            $request->setLangId($languageCode);
             $request->setNotifyUrl($notifyUrl);
             $request->setErrorUrl($errorUrl);
             $request->setAddInfo1($addInfo1);
