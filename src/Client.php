@@ -277,8 +277,7 @@ class Client
             throw $ex;
         }
 
-        $signatureCalculator = new SignatureCalculator();
-        $signatureCalculator->sign($request, $this->kSig);
+        $this->sign($request);
 
         return new InitResponse(
             $this->soapClientWrapper->init(
@@ -309,8 +308,9 @@ class Client
         $request->setTid($this->tId);
         $request->setShopId($shopId);
         $request->setPaymentId($paymentId);
-        $signatureCalculator = new SignatureCalculator();
-        $signatureCalculator->sign($request, $this->kSig);
+
+        $this->sign($request);
+
         $request = array('request' => ($request->toArray()));
         $this->logger->debug(print_r($request, true));
 
@@ -336,5 +336,14 @@ class Client
     protected function canExecute()
     {
         return $this->isInitialized();
+    }
+
+    /**
+     * @param $request
+     */
+    protected function sign(SignableInterface $request)
+    {
+        $signatureCalculator = new SignatureCalculator($this->logger);
+        $signatureCalculator->sign($request, $this->kSig);
     }
 }
