@@ -8,7 +8,6 @@
 
 namespace Webgriffe\LibUnicreditImprese\Lists;
 
-
 class Operation implements ValuesList
 {
     const TRANSACTION_TYPE_AUTH     = 'AUTH';
