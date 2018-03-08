@@ -94,6 +94,8 @@ class Request implements SignableInterface
      */
     public function toArray()
     {
+        //Even though the documentation mentions an initial uppercase letter in the field names, these seem to work
+        //with a lowercase first letter...
         return array(
             'signature' => $this->signature,
             'tid'       => $this->tid,

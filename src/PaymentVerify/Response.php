@@ -6,7 +6,6 @@ use Webgriffe\LibUnicreditImprese\PaymentResponse;
 
 class Response extends PaymentResponse
 {
-    protected $tid;
     protected $rc;
     protected $error;
     protected $errorDesc;
@@ -202,7 +201,8 @@ class Response extends PaymentResponse
     {
         $data = $soapResponse->response;
 
-        $this->tid = $data->tid;
+        //Even though the documentation mentions an initial uppercase letter in the field names, these seem to come
+        //with a lowercase first letter...
         $this->rc = $data->rc;
         $this->error = $data->error;
         $this->errorDesc = $data->errorDesc;
