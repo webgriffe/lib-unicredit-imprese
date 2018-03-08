@@ -8,7 +8,7 @@ namespace Webgriffe\LibUnicreditImprese\Lists;
  * Date: 08/03/18
  * Time: 14.25
  */
-class Currency implements ValuesList
+class Currency implements CurrencyList
 {
     const CURRENCY_CODE_EUR = 'EUR';
     const CURRENCY_CODE_USD = 'USD';

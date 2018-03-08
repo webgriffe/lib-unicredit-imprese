@@ -8,7 +8,7 @@
 
 namespace Webgriffe\LibUnicreditImprese\Lists;
 
-class Language implements ValuesList
+class Language implements LanguageList
 {
     const LANGUAGE_ITA = 'IT';
     const LANGUAGE_ENG = 'EN';
