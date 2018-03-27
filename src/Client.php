@@ -4,6 +4,7 @@ namespace Webgriffe\LibUnicreditImprese;
 
 use Psr\Log\LoggerInterface;
 
+use Psr\Log\LogLevel;
 use Webgriffe\LibUnicreditImprese\PaymentInit\Request as InitRequest;
 use Webgriffe\LibUnicreditImprese\PaymentInit\Response as InitResponse;
 
@@ -21,6 +22,8 @@ use Webgriffe\LibUnicreditImprese\Lists\Operation;
  */
 class Client
 {
+    use Logging;
+
     /**
      * @deprecated Use the constants in the Webgriffe\LibUnicreditImprese\Lists\Operation class instead
      */
@@ -52,11 +55,6 @@ class Client
     const LANGUAGE_ENG = Language::LANGUAGE_ENG;
 
     const TRANSACTION_IN_PROGRESS_RETURN_CODE = 'IGFS_814';
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
 
     /**
      * @var string
@@ -150,12 +148,11 @@ class Client
             'soap_version' => SOAP_1_1,
         );
         if (!extension_loaded('soap')) {
-            if ($this->logger) {
-                $this->logger->critical(
-                    'Unable to create the webserver client.'.PHP_EOL.
-                    'The PHP_SOAP extension is required to use this library.'
-                );
-            }
+            $this->log(
+                'Unable to create the webserver client.'.PHP_EOL.
+                'The PHP_SOAP extension is required to use this library.',
+                LogLevel::CRITICAL
+            );
             throw new \RuntimeException('PHP SOAP extension is required.');
         }
 
@@ -273,7 +270,7 @@ class Client
             $request->setValidityExpire($validityExpire);
             $request->setTid($this->tId);
         } catch (\Exception $ex) {
-            $this->logger->critical($ex->getMessage());
+            $this->log('An error occurred while initializing the Init request: '.$ex->getMessage(), LogLevel::CRITICAL);
             throw $ex;
         }
 
@@ -312,7 +309,7 @@ class Client
         $this->sign($request);
 
         $request = array('request' => ($request->toArray()));
-        $this->logger->debug(print_r($request, true));
+        $this->log('Verify request: '.print_r($request, true));
 
         return new VerifyResponse(
             $this->soapClientWrapper->verify($request),

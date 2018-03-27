@@ -6,7 +6,7 @@ use Psr\Log\LoggerInterface;
 
 class SignatureCalculator
 {
-    protected $logger;
+    use Logging;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -22,11 +22,11 @@ class SignatureCalculator
     {
         $stringToSign = $signable->getSignatureData();
 
-        $this->logger->debug('Signature calculated on string: '.$stringToSign);
+        $this->log('Signature calculated on string: '.$stringToSign);
 
         $signature = base64_encode(hash_hmac($method, $stringToSign, $key, true));
 
-        $this->logger->debug('Calculated signature: '.$signature);
+        $this->log('Calculated signature: '.$signature);
 
         $signable->setSignature($signature);
     }
