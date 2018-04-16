@@ -24,6 +24,8 @@ abstract class PaymentResponse
     {
         $this->logger = $logger;
 
+        $this->log('Raw response: '.print_r($data, true));
+
         if (isset($data->response->error) && !empty($data->response->error)) {
             $this->log('Webservice error, description:' . print_r($data, true), LogLevel::CRITICAL);
         }
