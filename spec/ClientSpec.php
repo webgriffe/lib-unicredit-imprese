@@ -159,6 +159,54 @@ class ClientSpec extends ObjectBehavior
             );
     }
 
+    public function it_should_report_error_if_shopid_is_too_long_during_payment_init(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->shouldThrow(new \InvalidArgumentException('Shop Id is too long (max 35 chars)'))
+            ->duringPaymentInit(
+                'PURCHASE',
+                10.0,
+                'IT',
+                'http://notify.com',
+                'http://error.com',
+                'EUR',
+                '123456789012345678901234567890123456'
+            );
+    }
+
+    public function it_should_report_error_if_shopid_contains_disallowed_chars_during_payment_init(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->shouldThrow(new \InvalidArgumentException('Shop Id can only contain chars a-z A-Z 0-9 /-?:().,\'+<space>'))
+            ->duringPaymentInit(
+                'PURCHASE',
+                10.0,
+                'IT',
+                'http://notify.com',
+                'http://error.com',
+                'EUR',
+                '1234567890~1234567890'
+            );
+    }
+
     public function it_should_return_payment_init_response_on_payment_init(LoggerInterface $logger, $soapClientWrapper)
     {
         $this->beConstructedWith($logger);
@@ -177,7 +225,9 @@ class ClientSpec extends ObjectBehavior
             10.0,
             'IT',
             'http://notify.com',
-            'http://error.com'
+            'http://error.com',
+            'EUR',
+            "/-?:().,'+ "   //Try all special chars that are allowed
         )->shouldReturnAnInstanceOf(PaymentInitResponse::class);
     }
 

@@ -244,6 +244,16 @@ class Client
             throw new \InvalidArgumentException(sprintf('Unsupported currency specified %s.', $currencyCode));
         }
 
+        if ($shopId) {
+            if (strlen($shopId) > 35) {
+                throw new \InvalidArgumentException('Shop Id is too long (max 35 chars)');
+            }
+
+            if (!preg_match("#^[a-zA-Z0-9/\-\?\:\(\)\.,'\+ ]*$#", $shopId)) {
+                throw new \InvalidArgumentException('Shop Id can only contain chars a-z A-Z 0-9 /-?:().,\'+<space>');
+            }
+        }
+
         //@todo more validation
 
         try {
