@@ -249,7 +249,7 @@ class Response extends PaymentResponse
             $this->tranId = $data->tranID;
             $this->authCode = $data->authCode;
 
-            //These are for non-Myban transactions
+            //These are for non-Mybank transactions
             $this->enrStatus = isset($data->enrStatus) ? $data->enrStatus : 'N';
             $this->authStatus = isset($data->authStatus) ? $data->authStatus : 'N';
             $this->brand = isset($data->brand) ? $data->brand : null;
