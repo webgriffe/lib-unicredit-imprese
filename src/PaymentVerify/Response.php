@@ -17,6 +17,8 @@ class Response extends PaymentResponse
     protected $enrStatus;
     protected $authStatus;
     protected $brand;
+    protected $status;      //For Mybank
+    protected $payInstr;    //For Mybank
 
     /**
      * @return mixed
@@ -195,6 +197,38 @@ class Response extends PaymentResponse
     }
 
     /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPayInstr()
+    {
+        return $this->payInstr;
+    }
+
+    /**
+     * @param mixed $payInstr
+     */
+    public function setPayInstr($payInstr)
+    {
+        $this->payInstr = $payInstr;
+    }
+
+    /**
      * @inheritdoc
      */
     protected function initFromRawSoapResponse(\stdClass $soapResponse)
@@ -209,12 +243,20 @@ class Response extends PaymentResponse
         $this->signature = $data->signature;
         $this->shopId = $data->shopID;
         $this->paymentId = $data->paymentID;
+
         if (!$this->error) {
+            //These should always be there
             $this->tranId = $data->tranID;
             $this->authCode = $data->authCode;
+
+            //These are for non-Myban transactions
             $this->enrStatus = isset($data->enrStatus) ? $data->enrStatus : 'N';
             $this->authStatus = isset($data->authStatus) ? $data->authStatus : 'N';
-            $this->brand = $data->brand;
+            $this->brand = isset($data->brand) ? $data->brand : null;
+
+            //These are for Mybank transactions
+            $this->payInstr = isset($data->payInstr) ? $data->payInstr : null;
+            $this->status = isset($data->status) ? $data->status : null;
         }
     }
 }

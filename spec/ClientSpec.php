@@ -262,6 +262,22 @@ class ClientSpec extends ObjectBehavior
 
         $this->paymentVerify('shopid', 'paymentid')->shouldReturnAnInstanceOf(PaymentVerifyResponse::class);
     }
+
+    public function it_should_return_payment_verify_response_on_mybank_payment_verify(LoggerInterface $logger, $soapClientWrapper)
+    {
+        $this->beConstructedWith($logger);
+
+        $soapClientWrapper->beADoubleOf(WrapperInterface::class);
+        $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
+        $soapClientWrapper->isInitialized()->willReturn(true);
+        $soapClientWrapper->verify(Argument::any())->willReturn($this->getMybankSoapVerifyResponse());
+
+        $this->setSoapClientWrapper($soapClientWrapper);
+
+        $this->init(true, 'key', 'tid', 'wsdl');
+
+        $this->paymentVerify('shopid', 'paymentid')->shouldReturnAnInstanceOf(PaymentVerifyResponse::class);
+    }
     
     private function getSoapInitResponse()
     {
@@ -293,12 +309,38 @@ class ClientSpec extends ObjectBehavior
 
         $response->tranID = "";
         $response->authCode = "";
+
         $response->enrStatus = "";
         $response->authStatus = "";
         $response->brand = "";
 
         $result = new \stdClass();
         $result->response = $response;
+
+        return $result;
+    }
+
+    private function getMybankSoapVerifyResponse()
+    {
+        $response = new \stdClass();
+
+        $response->tid = "";
+        $response->payInstr = "";
+        $response->rc = "";
+        $response->error = "";
+        $response->errorDesc = "";
+        $response->signature = "";
+        $response->shopID = "";
+        $response->paymentID = "";
+
+        $response->tranID = "";
+        $response->authCode = "";
+
+        $response->status = "";
+
+        $result = new \stdClass();
+        $result->response = $response;
+
         return $result;
     }
 }
