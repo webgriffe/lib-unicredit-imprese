@@ -146,6 +146,7 @@ class Client
         $soapOptions = array(
             'compression' => SOAP_COMPRESSION_ACCEPT,
             'soap_version' => SOAP_1_1,
+            'trace' => true,
         );
         if (!extension_loaded('soap')) {
             $this->log(

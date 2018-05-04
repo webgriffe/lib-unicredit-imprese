@@ -117,7 +117,7 @@ class Response extends PaymentResponse
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getTranId()
     {
@@ -125,7 +125,7 @@ class Response extends PaymentResponse
     }
 
     /**
-     * @param mixed $tranId
+     * @param int $tranId
      */
     public function setTranId($tranId)
     {
