@@ -286,12 +286,15 @@ class Client
 
         $this->sign($request);
 
-        return new InitResponse(
-            $this->soapClientWrapper->init(
-                array('request' => ($request->toArray()))
-            ),
-            $this->logger
-        );
+        $rawSoapResponse = $this->soapClientWrapper->init(array('request' => ($request->toArray())));
+
+        if (isset($rawSoapResponse->response->error) && !empty($rawSoapResponse->response->error)) {
+            $this->log('Failure raw response received: ' . print_r($rawSoapResponse, true));
+        } else {
+            $this->log('Succesful raw response received: ' . print_r($rawSoapResponse, true));
+        }
+
+        return new InitResponse($rawSoapResponse);
     }
 
     /**
@@ -319,12 +322,17 @@ class Client
         $this->sign($request);
 
         $request = array('request' => ($request->toArray()));
-        $this->log('Verify request: '.print_r($request, true));
+        $this->log('Verify request: ' . print_r($request, true));
 
-        return new VerifyResponse(
-            $this->soapClientWrapper->verify($request),
-            $this->logger
-        );
+        $rawSoapResponse = $this->soapClientWrapper->verify($request);
+
+        if (isset($rawSoapResponse->response->error) && !empty($rawSoapResponse->response->error)) {
+            $this->log('Failure raw response received: ' . print_r($rawSoapResponse, true));
+        } else {
+            $this->log('Succesful raw response received: ' . print_r($rawSoapResponse, true));
+        }
+
+        return new VerifyResponse($rawSoapResponse);
     }
 
     /**

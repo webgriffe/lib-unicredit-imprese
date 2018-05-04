@@ -13,29 +13,18 @@ use Psr\Log\LogLevel;
 
 abstract class PaymentResponse
 {
-    use Logging;
-
     /**
      * PaymentResponse constructor.
-     * @param \stdClass $data
-     * @param LoggerInterface|null $logger
+     * @param \stdClass $rawSoapResponse
      */
-    public function __construct(\stdClass $data, LoggerInterface $logger)
+    public function __construct(\stdClass $rawSoapResponse)
     {
-        $this->logger = $logger;
-
-        $this->log('Raw response: '.print_r($data, true));
-
-        if (isset($data->response->error) && !empty($data->response->error)) {
-            $this->log('Webservice error, description:' . print_r($data, true), LogLevel::CRITICAL);
-        }
-
-        $this->initFromRawSoapResponse($data);
+        $this->initFromRawSoapResponse($rawSoapResponse);
     }
 
     /**
-     * @param \stdClass $data
+     * @param \stdClass $rawSoapResponse
      * @return void
      */
-    abstract protected function initFromRawSoapResponse(\stdClass $data);
+    abstract protected function initFromRawSoapResponse(\stdClass $rawSoapResponse);
 }
