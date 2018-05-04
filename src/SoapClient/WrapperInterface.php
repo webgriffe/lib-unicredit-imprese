@@ -32,4 +32,14 @@ interface WrapperInterface
      * @return \stdClass
      */
     public function verify(array $requestData);
+
+    /**
+     * @return string
+     */
+    public function getLastRequest();
+
+    /**
+     * @return string
+     */
+    public function getLastResponse();
 }

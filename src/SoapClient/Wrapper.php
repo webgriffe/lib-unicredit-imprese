@@ -47,6 +47,25 @@ class Wrapper implements WrapperInterface
         return $this->getSoapClient()->verify($requestData);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getLastRequest()
+    {
+        return $this->getSoapClient()->__getLastRequest();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLastResponse()
+    {
+        return $this->getSoapClient()->__getLastResponse();
+    }
+
+    /**
+     * @return \SoapClient
+     */
     protected function getSoapClient()
     {
         if (!$this->isInitialized()) {

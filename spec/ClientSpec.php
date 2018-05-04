@@ -203,7 +203,7 @@ class ClientSpec extends ObjectBehavior
                 'http://notify.com',
                 'http://error.com',
                 'EUR',
-                '1234567890~1234567890'
+                '1234567890~1234567890' //This contains a tilde, not a dash!
             );
     }
 
@@ -214,6 +214,8 @@ class ClientSpec extends ObjectBehavior
         $soapClientWrapper->beADoubleOf(WrapperInterface::class);
         $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
         $soapClientWrapper->isInitialized()->willReturn(true);
+        $soapClientWrapper->getLastRequest()->willReturn('last request');
+        $soapClientWrapper->getLastResponse()->willReturn('last response');
         $soapClientWrapper->init(Argument::any())->willReturn($this->getSoapInitResponse());
 
         $this->setSoapClientWrapper($soapClientWrapper);
@@ -254,6 +256,8 @@ class ClientSpec extends ObjectBehavior
         $soapClientWrapper->beADoubleOf(WrapperInterface::class);
         $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
         $soapClientWrapper->isInitialized()->willReturn(true);
+        $soapClientWrapper->getLastRequest()->willReturn('last request');
+        $soapClientWrapper->getLastResponse()->willReturn('last response');
         $soapClientWrapper->verify(Argument::any())->willReturn($this->getSoapVerifyResponse());
 
         $this->setSoapClientWrapper($soapClientWrapper);
@@ -270,6 +274,8 @@ class ClientSpec extends ObjectBehavior
         $soapClientWrapper->beADoubleOf(WrapperInterface::class);
         $soapClientWrapper->initialize('wsdl', Argument::any())->willReturn(null);
         $soapClientWrapper->isInitialized()->willReturn(true);
+        $soapClientWrapper->getLastRequest()->willReturn('last request');
+        $soapClientWrapper->getLastResponse()->willReturn('last response');
         $soapClientWrapper->verify(Argument::any())->willReturn($this->getMybankSoapVerifyResponse());
 
         $this->setSoapClientWrapper($soapClientWrapper);

@@ -8,9 +8,6 @@
 
 namespace Webgriffe\LibUnicreditImprese;
 
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
-
 abstract class PaymentResponse
 {
     /**

@@ -286,15 +286,21 @@ class Client
 
         $this->sign($request);
 
-        $rawSoapResponse = $this->soapClientWrapper->init(array('request' => ($request->toArray())));
-
-        if (isset($rawSoapResponse->response->error) && !empty($rawSoapResponse->response->error)) {
-            $this->log('Failure raw response received: ' . print_r($rawSoapResponse, true));
-        } else {
-            $this->log('Succesful raw response received: ' . print_r($rawSoapResponse, true));
+        try {
+            $rawSoapResponseObject = $this->soapClientWrapper->init(array('request' => ($request->toArray())));
+        } finally {
+            //The "finally" statement is used to ensure that something is logged even if an error occurred
+            $this->log('Raw request: ' . $this->soapClientWrapper->getLastRequest());
+            $this->log('Raw response: ' . $this->soapClientWrapper->getLastResponse());
         }
 
-        return new InitResponse($rawSoapResponse);
+        if (isset($rawSoapResponseObject->response->error) && !empty($rawSoapResponseObject->response->error)) {
+            $this->log('Failure response received: ' . print_r($rawSoapResponseObject, true));
+        } else {
+            $this->log('Succesful response received: ' . print_r($rawSoapResponseObject, true));
+        }
+
+        return new InitResponse($rawSoapResponseObject);
     }
 
     /**
@@ -324,15 +330,21 @@ class Client
         $request = array('request' => ($request->toArray()));
         $this->log('Verify request: ' . print_r($request, true));
 
-        $rawSoapResponse = $this->soapClientWrapper->verify($request);
-
-        if (isset($rawSoapResponse->response->error) && !empty($rawSoapResponse->response->error)) {
-            $this->log('Failure raw response received: ' . print_r($rawSoapResponse, true));
-        } else {
-            $this->log('Succesful raw response received: ' . print_r($rawSoapResponse, true));
+        try {
+            $rawSoapResponseObject = $this->soapClientWrapper->verify($request);
+        } finally {
+            //The "finally" statement is used to ensure that something is logged even if an error occurred
+            $this->log('Raw request: '.$this->soapClientWrapper->getLastRequest());
+            $this->log('Raw response: '.$this->soapClientWrapper->getLastResponse());
         }
 
-        return new VerifyResponse($rawSoapResponse);
+        if (isset($rawSoapResponseObject->response->error) && !empty($rawSoapResponseObject->response->error)) {
+            $this->log('Failure response received: ' . print_r($rawSoapResponseObject, true));
+        } else {
+            $this->log('Succesful response received: ' . print_r($rawSoapResponseObject, true));
+        }
+
+        return new VerifyResponse($rawSoapResponseObject);
     }
 
     /**
